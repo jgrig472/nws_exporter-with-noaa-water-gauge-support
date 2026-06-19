@@ -4,7 +4,7 @@
 [![docs.rs](https://docs.rs/nws_exporter/badge.svg)](https://docs.rs/nws_exporter/)
 [![crates.io](https://img.shields.io/crates/v/nws_exporter.svg)](https://crates.io/crates/nws_exporter/)
 
-Prometheus metrics exporter for api.weather.gov
+Prometheus metrics exporter for api.weather.gov and NOAA water gauges
 
 ## Features
 
@@ -21,8 +21,21 @@ metrics are emitted when available (not all fields are available for all station
 * `nws_relative_humidity{station=$STATION}` - Relative humidity (0-100).
 * `nws_wind_chill_degrees{station=$STATION}` - Temperature with wind chill, in degrees celsius.
 
+`nws_exporter` can also fetch water stage and flow information for one or more NOAA water gauges using the
+[NOAA National Water Prediction Service API], independently of (or alongside) NWS weather stations. The
+following metrics are emitted when available (not all fields are available for all gauges).
+
+* `nws_water_gauge{gauge=$GAUGE, gauge_name=$GAUGE_NAME, state=$STATE}` - Water gauge metadata.
+* `nws_water_stage_feet{gauge=$GAUGE}` - Current observed water stage, in feet.
+* `nws_water_flow_kcfs{gauge=$GAUGE}` - Current observed flow, in kcfs (thousands of cubic feet per second).
+* `nws_water_action_stage_feet{gauge=$GAUGE}` - Action stage threshold, in feet.
+* `nws_water_minor_flood_stage_feet{gauge=$GAUGE}` - Minor flood stage threshold, in feet.
+* `nws_water_moderate_flood_stage_feet{gauge=$GAUGE}` - Moderate flood stage threshold, in feet.
+* `nws_water_major_flood_stage_feet{gauge=$GAUGE}` - Major flood stage threshold, in feet.
+
 [NWS station]: https://www.weather.gov/documentation/services-web-api#/default/obs_stations
 [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
+[NOAA National Water Prediction Service API]: https://water.noaa.gov/
 
 ## Install
 
@@ -98,6 +111,28 @@ You can then run `nws_exporter` for this station as demonstrated below.
 ```text
 ./nws_exporter KBOS
 ```
+
+### Picking a water gauge
+
+In order to export NOAA water gauge information, `nws_exporter` needs to be told which gauge(s) to request
+information for. Gauge IDs (also called LIDs) can be found by searching for your river or location on
+[water.noaa.gov] and reading the ID out of the gauge's URL. For example `dspi2` is the ID for the gauge on
+the Des Plaines River at Joliet, IL.
+
+You can then run `nws_exporter` for this gauge using the `--gauge` flag, which may be repeated to monitor
+multiple gauges at once.
+
+```text
+./nws_exporter --gauge dspi2
+```
+
+Water gauges can also be combined with one or more NWS weather stations in a single invocation.
+
+```text
+./nws_exporter KBOS --gauge dspi2 --gauge dspi3
+```
+
+[water.noaa.gov]: https://water.noaa.gov/
 
 ### Run
 
