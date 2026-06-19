@@ -35,6 +35,8 @@ docker run -p 9782:9782 jasona1246/nws_exporter-with-noaa-water-gauge-support KB
 
 Metrics are then available at `http://localhost:9782/metrics`.
 
+Press Ctrl-C, or run `docker stop` from another terminal, to stop the container.
+
 ## Metrics emitted
 
 Weather station metrics (prefixed `nws_`): station metadata, elevation, temperature, dewpoint, barometric
