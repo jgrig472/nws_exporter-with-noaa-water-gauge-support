@@ -37,6 +37,8 @@ Metrics are then available at `http://localhost:9782/metrics`.
 
 Press Ctrl-C, or run `docker stop` from another terminal, to stop the container.
 
+Logs are written to stdout/stderr and can be viewed with `docker logs`.
+
 ## Metrics emitted
 
 Weather station metrics (prefixed `nws_`): station metadata, elevation, temperature, dewpoint, barometric
