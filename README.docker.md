@@ -43,7 +43,7 @@ pressure, visibility, relative humidity, and wind chill.
 Water gauge metrics (prefixed `nws_water_`): gauge metadata, current stage (feet), current flow (kcfs),
 and action/minor/moderate/major flood stage thresholds (feet).
 
-## Prometheus scrape config
+## [Prometheus] scrape config
 
 ```yaml
 scrape_configs:
@@ -55,3 +55,5 @@ scrape_configs:
 ## License
 
 GPL, version 3. See the [GitHub repository](https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support) for source and license details.
+
+[Prometheus]: https://prometheus.io/
