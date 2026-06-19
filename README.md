@@ -50,7 +50,7 @@ for [each release](https://github.com/56quarters/nws_exporter/releases).
 
 ### Docker
 
-Docker images for GNU/Linux (amd64) are published for [each release](https://hub.docker.com/r/56quarters/nws_exporter).
+Docker images for GNU/Linux (amd64) are published for [each release](https://hub.docker.com/r/jasona1246/nws_exporter-with-noaa-water-gauge-support).
 
 ### Cargo
 
