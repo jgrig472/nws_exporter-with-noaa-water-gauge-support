@@ -30,6 +30,7 @@ const NOAA_SENTINEL: f64 = -999.0;
 #[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
 struct WaterGaugeLabels {
     gauge: String,
+    gauge_name: String,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
@@ -42,7 +43,8 @@ struct WaterGaugeInfoLabels {
 /// Holder for Prometheus metrics tracking NOAA water gauge stage, flow, and flood thresholds.
 ///
 /// All metrics use the prefix `nws_water_` and carry a `gauge` label set to the gauge LID
-/// (e.g. `DSPI2`). Metrics are updated on every call to `update()`.
+/// (e.g. `DSPI2`) and a `gauge_name` label set to the gauge's human-readable name as reported
+/// by NOAA (e.g. `Des Plaines River`). Metrics are updated on every call to `update()`.
 ///
 /// Registered metrics:
 /// - `nws_water_gauge` - gauge metadata (always 1), with `gauge_name` and `state` labels
@@ -129,6 +131,7 @@ impl WaterLevelMetrics {
 
         let labels = WaterGaugeLabels {
             gauge: gauge.lid.clone(),
+            gauge_name: gauge.name.clone(),
         };
 
         if let Some(status) = &gauge.status {

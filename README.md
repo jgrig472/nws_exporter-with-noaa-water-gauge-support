@@ -26,12 +26,14 @@ metrics are emitted when available (not all fields are available for all station
 following metrics are emitted when available (not all fields are available for all gauges).
 
 * `nws_water_gauge{gauge=$GAUGE, gauge_name=$GAUGE_NAME, state=$STATE}` - Water gauge metadata.
-* `nws_water_stage_feet{gauge=$GAUGE}` - Current observed water stage, in feet.
-* `nws_water_flow_kcfs{gauge=$GAUGE}` - Current observed flow, in kcfs (thousands of cubic feet per second).
-* `nws_water_action_stage_feet{gauge=$GAUGE}` - Action stage threshold, in feet.
-* `nws_water_minor_flood_stage_feet{gauge=$GAUGE}` - Minor flood stage threshold, in feet.
-* `nws_water_moderate_flood_stage_feet{gauge=$GAUGE}` - Moderate flood stage threshold, in feet.
-* `nws_water_major_flood_stage_feet{gauge=$GAUGE}` - Major flood stage threshold, in feet.
+* `nws_water_stage_feet{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Current observed water stage, in feet.
+* `nws_water_flow_kcfs{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Current observed flow, in kcfs (thousands of cubic feet per second).
+* `nws_water_action_stage_feet{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Action stage threshold, in feet.
+* `nws_water_minor_flood_stage_feet{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Minor flood stage threshold, in feet.
+* `nws_water_moderate_flood_stage_feet{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Moderate flood stage threshold, in feet.
+* `nws_water_major_flood_stage_feet{gauge=$GAUGE, gauge_name=$GAUGE_NAME}` - Major flood stage threshold, in feet.
+
+`$GAUGE_NAME` is the human-readable name NOAA reports for the gauge (e.g. `Des Plaines River`).
 
 [NWS station]: https://www.weather.gov/documentation/services-web-api#/default/obs_stations
 [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
