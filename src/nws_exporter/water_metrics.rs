@@ -76,7 +76,11 @@ impl WaterLevelMetrics {
         let major_flood_stage = Family::<WaterGaugeLabels, Gauge<f64, AtomicU64>>::default();
 
         reg.register("nws_water_gauge", "Water gauge metadata", gauge_info.clone());
-        reg.register("nws_water_stage_feet", "Current observed water stage in feet", stage.clone());
+        reg.register(
+            "nws_water_stage_feet",
+            "Current observed water stage in feet",
+            stage.clone(),
+        );
         reg.register(
             "nws_water_flow_kcfs",
             "Current observed flow in kcfs (thousands of cubic feet per second)",
@@ -121,11 +125,7 @@ impl WaterLevelMetrics {
         let info_labels = WaterGaugeInfoLabels {
             gauge: gauge.lid.clone(),
             gauge_name: gauge.name.clone(),
-            state: gauge
-                .state
-                .as_ref()
-                .map(|s| s.abbreviation.clone())
-                .unwrap_or_default(),
+            state: gauge.state.as_ref().map(|s| s.abbreviation.clone()).unwrap_or_default(),
         };
         self.gauge_info.get_or_create(&info_labels).set(1.0);
 

@@ -113,12 +113,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         });
 
         let metrics = ForecastMetrics::new(&mut registry);
-        let update = WeatherUpdateTask::new(
-            opts.station,
-            metrics,
-            client,
-            Duration::from_secs(opts.refresh_secs),
-        );
+        let update = WeatherUpdateTask::new(opts.station, metrics, client, Duration::from_secs(opts.refresh_secs));
 
         if let Err(e) = update.initialize().await {
             tracing::error!(message = "failed to fetch initial station information", error = %e);
