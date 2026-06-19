@@ -3,6 +3,7 @@
 ![build status](https://github.com/56quarters/nws_exporter/actions/workflows/rust.yml/badge.svg)
 [![docs.rs](https://docs.rs/nws_exporter/badge.svg)](https://docs.rs/nws_exporter/)
 [![crates.io](https://img.shields.io/crates/v/nws_exporter.svg)](https://crates.io/crates/nws_exporter/)
+[![Docker Hub](https://img.shields.io/docker/v/jasona1246/nws_exporter-with-noaa-water-gauge-support?label=docker%20hub)](https://hub.docker.com/r/jasona1246/nws_exporter-with-noaa-water-gauge-support)
 
 Prometheus metrics exporter for api.weather.gov and NOAA water gauges
 
