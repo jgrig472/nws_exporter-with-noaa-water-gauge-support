@@ -5,7 +5,7 @@
 [![crates.io](https://img.shields.io/crates/v/nws_exporter.svg)](https://crates.io/crates/nws_exporter/)
 [![Docker Hub](https://img.shields.io/docker/v/jasona1246/nws_exporter-with-noaa-water-gauge-support?label=docker%20hub)](https://hub.docker.com/r/jasona1246/nws_exporter-with-noaa-water-gauge-support)
 
-Prometheus metrics exporter for api.weather.gov and NOAA water gauges
+Prometheus metrics exporter for api.weather.gov, NOAA water gauges, and NOAA buoys
 
 ## Features
 
@@ -36,9 +36,30 @@ following metrics are emitted when available (not all fields are available for a
 
 `$GAUGE_NAME` is the human-readable name NOAA reports for the gauge (e.g. `Des Plaines River`).
 
+`nws_exporter` can also fetch observations for one or more [NOAA NDBC] buoys or coastal weather stations,
+independently of (or alongside) NWS weather stations and water gauges. The following metrics are emitted
+when available (not all fields are available for all stations).
+
+* `nws_buoy_station{buoy=$BUOY}` - Buoy or coastal station metadata.
+* `nws_buoy_wind_direction_degrees{buoy=$BUOY}` - Wind direction, in degrees clockwise from true north.
+* `nws_buoy_wind_speed_mps{buoy=$BUOY}` - Wind speed, in meters per second.
+* `nws_buoy_wind_gust_mps{buoy=$BUOY}` - Peak wind gust speed, in meters per second.
+* `nws_buoy_wave_height_meters{buoy=$BUOY}` - Significant wave height, in meters.
+* `nws_buoy_dominant_wave_period_seconds{buoy=$BUOY}` - Dominant wave period, in seconds.
+* `nws_buoy_average_wave_period_seconds{buoy=$BUOY}` - Average wave period, in seconds.
+* `nws_buoy_wave_direction_degrees{buoy=$BUOY}` - Mean wave direction, in degrees clockwise from true north.
+* `nws_buoy_pressure_hpa{buoy=$BUOY}` - Sea level pressure, in hectopascals.
+* `nws_buoy_pressure_tendency_hpa{buoy=$BUOY}` - Pressure tendency over the last 3 hours, in hectopascals.
+* `nws_buoy_air_temperature_degrees{buoy=$BUOY}` - Air temperature, in degrees celsius.
+* `nws_buoy_water_temperature_degrees{buoy=$BUOY}` - Water temperature, in degrees celsius.
+* `nws_buoy_dewpoint_degrees{buoy=$BUOY}` - Dewpoint, in degrees celsius.
+* `nws_buoy_visibility_nmi{buoy=$BUOY}` - Visibility, in nautical miles.
+* `nws_buoy_tide_feet{buoy=$BUOY}` - Water level above or below mean lower low water, in feet.
+
 [NWS station]: https://www.weather.gov/documentation/services-web-api#/default/obs_stations
 [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
 [NOAA National Water Prediction Service API]: https://water.noaa.gov/
+[NOAA NDBC]: https://www.ndbc.noaa.gov/
 
 ## Install
 
@@ -136,6 +157,27 @@ Water gauges can also be combined with one or more NWS weather stations in a sin
 ```
 
 [water.noaa.gov]: https://water.noaa.gov/
+
+### Picking a buoy or coastal station
+
+In order to export NOAA NDBC observations, `nws_exporter` needs to be told which buoy or coastal station(s)
+to request information for. Station IDs can be found by searching [ndbc.noaa.gov] for your area and reading
+the ID out of the station's page. For example `45186` is the ID for the Waukegan buoy on Lake Michigan.
+
+You can then run `nws_exporter` for this station using the `--buoy` flag, which may be repeated to monitor
+multiple stations at once.
+
+```text
+./nws_exporter --buoy 45186
+```
+
+Buoys can also be combined with one or more NWS weather stations and water gauges in a single invocation.
+
+```text
+./nws_exporter KBOS --gauge dspi2 --buoy 45186 --buoy sdbc1
+```
+
+[ndbc.noaa.gov]: https://www.ndbc.noaa.gov/
 
 ### Run
 
