@@ -1,11 +1,13 @@
 # nws_exporter
 
-Prometheus metrics exporter for [api.weather.gov] weather stations and [NOAA water gauges].
+Prometheus metrics exporter for [api.weather.gov] weather stations, [NOAA water gauges], and
+[NOAA buoys].
 
 Source and full documentation: https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support
 
 [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
 [NOAA water gauges]: https://water.noaa.gov/
+[NOAA buoys]: https://www.ndbc.noaa.gov/
 
 ## Quick start
 
@@ -27,10 +29,17 @@ Run it for a NOAA water gauge instead (e.g. `dspi2` for the Des Plaines River at
 docker run -p 9782:9782 jasona1246/nws_exporter-with-noaa-water-gauge-support --gauge dspi2
 ```
 
-Both can be combined, and `--gauge` may be repeated to monitor multiple gauges:
+Run it for a NOAA buoy or coastal station instead (e.g. `45186` for the Waukegan buoy on Lake Michigan):
 
 ```text
-docker run -p 9782:9782 jasona1246/nws_exporter-with-noaa-water-gauge-support KBOS --gauge dspi2 --gauge dspi3
+docker run -p 9782:9782 jasona1246/nws_exporter-with-noaa-water-gauge-support --buoy 45186
+```
+
+All three can be combined, and `--gauge`/`--buoy` may each be repeated to monitor multiple
+gauges/buoys:
+
+```text
+docker run -p 9782:9782 jasona1246/nws_exporter-with-noaa-water-gauge-support KBOS --gauge dspi2 --buoy 45186
 ```
 
 Metrics are then available at `http://localhost:9782/metrics`.
@@ -46,6 +55,9 @@ pressure, visibility, relative humidity, and wind chill.
 
 Water gauge metrics (prefixed `nws_water_`): gauge metadata, current stage (feet), current flow (kcfs),
 and action/minor/moderate/major flood stage thresholds (feet).
+
+Buoy metrics (prefixed `nws_buoy_`): station metadata, wind speed/gust/direction, wave height/period/
+direction, pressure (and tendency), air/water temperature, dewpoint, visibility, and tide.
 
 ## [Prometheus] scrape config
 
