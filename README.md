@@ -70,7 +70,7 @@ There are multiple ways to install `nws_exporter` listed below.
 ### Binaries
 
 Binaries are published for GNU/Linux (x86_64), Windows (x86_64), and MacOS (x86_64 and aarch64)
-for [each release](https://github.com/56quarters/nws_exporter/releases).
+for [each release](https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support/releases).
 
 ### Docker
 
@@ -101,7 +101,7 @@ the Rust `cargo` tool. Note that this requires you have Git and a Rust toolchain
 Get the sources:
 
 ```
-git clone https://github.com/56quarters/nws_exporter.git && cd nws_exporter
+git clone https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support.git && cd nws_exporter-with-noaa-water-gauge-support
 ```
 
 Install from local sources:
