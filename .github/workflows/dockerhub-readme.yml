@@ -20,4 +20,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: jasona1246/nws_exporter-with-noaa-water-gauge-support
           readme-filepath: ./README.docker.md
-          short-description: Prometheus metrics exporter for api.weather.gov weather stations and NOAA water gauges
+          short-description: Prometheus metrics exporter for api.weather.gov weather stations, NOAA water gauges, and NOAA buoys
