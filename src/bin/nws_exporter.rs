@@ -29,6 +29,7 @@ use nws_exporter::water_client::{WaterClientError, WaterGaugeClient};
 use nws_exporter::water_metrics::WaterLevelMetrics;
 use prometheus_client::registry::Registry;
 use reqwest::Client;
+use std::collections::HashMap;
 use std::error::Error;
 use std::io;
 use std::net::SocketAddr;
@@ -45,6 +46,7 @@ const DEFAULT_TIMEOUT_MILLIS: u64 = 5000;
 const DEFAULT_API_URL: &str = "https://api.weather.gov/";
 const DEFAULT_WATER_API_URL: &str = "https://api.water.noaa.gov/nwps/v1/";
 const DEFAULT_BUOY_API_URL: &str = "https://www.ndbc.noaa.gov/data/realtime2/";
+const DEFAULT_BUOY_STATION_TABLE_URL: &str = "https://www.ndbc.noaa.gov/data/stations/station_table.txt";
 
 /// Export National Weather Service forecasts, NOAA water gauge levels, and NOAA buoy
 /// observations as Prometheus metrics
@@ -80,6 +82,11 @@ struct NwsExporterApplication {
     /// Base URL for the NOAA NDBC realtime data feed
     #[arg(long, default_value_t = DEFAULT_BUOY_API_URL.into())]
     buoy_api_url: String,
+
+    /// URL for the NOAA NDBC station metadata table, used to look up friendly names for
+    /// `--buoy` stations
+    #[arg(long, default_value_t = DEFAULT_BUOY_STATION_TABLE_URL.into())]
+    buoy_station_table_url: String,
 
     /// Logging verbosity. Allowed values are 'trace', 'debug', 'info', 'warn', and 'error'
     /// (case insensitive)
@@ -162,9 +169,15 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     // Buoy update task (only when buoys are provided)
     if !opts.buoy.is_empty() {
-        let buoy_client = BuoyClient::new(http_client.clone(), &opts.buoy_api_url).unwrap_or_else(|e| {
-            tracing::error!(message = "unable to initialize buoy client", error = %e);
-            process::exit(1)
+        let buoy_client = BuoyClient::new(http_client.clone(), &opts.buoy_api_url, &opts.buoy_station_table_url)
+            .unwrap_or_else(|e| {
+                tracing::error!(message = "unable to initialize buoy client", error = %e);
+                process::exit(1)
+            });
+
+        let buoy_names = buoy_client.station_names().await.unwrap_or_else(|e| {
+            tracing::warn!(message = "failed to fetch buoy station names, buoy_name label will be empty", error = %e);
+            HashMap::new()
         });
 
         let buoy_metrics = BuoyMetrics::new(&mut registry);
@@ -172,6 +185,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             opts.buoy,
             buoy_metrics,
             buoy_client,
+            buoy_names,
             Duration::from_secs(opts.refresh_secs),
         );
 
@@ -347,17 +361,29 @@ struct BuoyUpdateTask {
     buoys: Vec<String>,
     metrics: BuoyMetrics,
     client: BuoyClient,
+    names: HashMap<String, String>,
     interval: Duration,
 }
 
 impl BuoyUpdateTask {
-    fn new(buoys: Vec<String>, metrics: BuoyMetrics, client: BuoyClient, interval: Duration) -> Self {
+    fn new(
+        buoys: Vec<String>,
+        metrics: BuoyMetrics,
+        client: BuoyClient,
+        names: HashMap<String, String>,
+        interval: Duration,
+    ) -> Self {
         Self {
             buoys,
             metrics,
             client,
+            names,
             interval,
         }
+    }
+
+    fn name_for(&self, station_id: &str) -> &str {
+        self.names.get(station_id).map(String::as_str).unwrap_or("")
     }
 
     /// Fetch the latest observation once to validate buoy IDs and populate initial metrics.
@@ -368,7 +394,7 @@ impl BuoyUpdateTask {
                 .observation(id)
                 .instrument(tracing::span!(Level::DEBUG, "buoy_observation"))
                 .await?;
-            self.metrics.update(&obs);
+            self.metrics.update(&obs, self.name_for(&obs.station_id));
             tracing::info!(message = "initialized buoy station", buoy_id = %id);
         }
 
@@ -389,7 +415,7 @@ impl BuoyUpdateTask {
                     .await
                 {
                     Ok(obs) => {
-                        self.metrics.update(&obs);
+                        self.metrics.update(&obs, self.name_for(&obs.station_id));
                         tracing::info!(message = "fetched buoy observation", buoy_id = %id);
                     }
                     Err(e) => {

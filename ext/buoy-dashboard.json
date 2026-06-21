@@ -53,7 +53,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_air_temperature_degrees{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_air_temperature_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Air Temp"
                       }
                     },
@@ -84,7 +84,7 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "celsius",
+                  "unit": "fahrenheit",
                   "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
                   "color": { "mode": "thresholds" }
                 },
@@ -114,7 +114,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_water_temperature_degrees{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_water_temperature_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Water Temp"
                       }
                     },
@@ -145,7 +145,7 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "celsius",
+                  "unit": "fahrenheit",
                   "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
                   "color": { "mode": "thresholds" }
                 },
@@ -358,7 +358,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_dewpoint_degrees{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_dewpoint_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Dewpoint"
                       }
                     },
@@ -389,7 +389,7 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "celsius",
+                  "unit": "fahrenheit",
                   "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
                   "color": { "mode": "thresholds" }
                 },
@@ -1301,14 +1301,14 @@
             "datasource": { "name": "PBFA97CFB590B2093" },
             "spec": {
               "qryType": 1,
-              "query": "label_values(buoy)",
+              "query": "query_result(nws_buoy_station)",
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             }
           },
-          "regex": "",
+          "regex": "/buoy=\"(?<value>[^\"]+)\".*buoy_name=\"(?<text>[^\"]+)\"/",
           "regexApplyTo": "value",
           "sort": "alphabeticalAsc",
-          "definition": "label_values(buoy)",
+          "definition": "query_result(nws_buoy_station)",
           "options": [],
           "multi": false,
           "includeAll": false,

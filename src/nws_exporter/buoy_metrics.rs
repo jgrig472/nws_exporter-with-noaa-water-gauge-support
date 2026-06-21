@@ -27,12 +27,14 @@ use std::sync::atomic::AtomicU64;
 #[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
 struct BuoyLabels {
     buoy: String,
+    buoy_name: String,
 }
 
 /// Holder for Prometheus metrics tracking NOAA NDBC buoy and coastal station observations.
 ///
 /// All metrics use the prefix `nws_buoy_` and carry a `buoy` label set to the station ID
-/// (e.g. `45186`). Metrics are updated on every call to `update()`.
+/// (e.g. `45186`) and a `buoy_name` label set to the station's friendly name as reported by
+/// NDBC (e.g. `Waukegan Buoy, IL`), if known. Metrics are updated on every call to `update()`.
 ///
 /// Registered metrics:
 /// - `nws_buoy_station` - station metadata (always 1)
@@ -179,9 +181,12 @@ impl BuoyMetrics {
     }
 
     /// Update all metrics from the most recent observation for a buoy or coastal station.
-    pub fn update(&self, obs: &BuoyObservation) {
+    /// `name` is the station's friendly name (e.g. from `BuoyClient::station_names()`), or an
+    /// empty string if not known.
+    pub fn update(&self, obs: &BuoyObservation, name: &str) {
         let labels = BuoyLabels {
             buoy: obs.station_id.clone(),
+            buoy_name: name.to_string(),
         };
 
         self.station.get_or_create(&labels).set(1.0);
