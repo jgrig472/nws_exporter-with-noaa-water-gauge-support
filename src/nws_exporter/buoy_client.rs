@@ -70,7 +70,8 @@ pub struct BuoyClient {
 }
 
 impl BuoyClient {
-    const USER_AGENT: &'static str = "nws_exporter/0.6.1 (https://github.com/56quarters/nws_exporter)";
+    const USER_AGENT: &'static str =
+        "nws_exporter/0.7.0 (https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support)";
 
     /// Create a new `BuoyClient` from the provided reqwest client, base URL for the NDBC
     /// realtime2 data feed (typically `https://www.ndbc.noaa.gov/data/realtime2/`), and URL

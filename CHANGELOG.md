@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.7.0 - 2026-06-21
+
+* Add a `buoy_name` label to all `nws_buoy_*` metrics with the station's friendly name (e.g.
+  `Waukegan Buoy, IL`), looked up from the NDBC station metadata table; empty for stations not
+  found in that table.
+* Add a `--buoy-station-table-url` flag for overriding the NDBC station metadata table URL used
+  for that lookup.
+* Update the [Grafana buoy dashboard](ext/buoy-dashboard.json) station selector to show friendly
+  station names instead of raw IDs, and convert the air/water temperature and dewpoint panels
+  from Celsius to Fahrenheit.
+
 ## v0.6.1 - 2026-06-21
 
 * Document buoy support (the new `--buoy` flag and `nws_buoy_*` metrics) in the Docker Hub

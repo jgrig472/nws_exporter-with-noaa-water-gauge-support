@@ -74,7 +74,7 @@
 //! steps.
 //!
 //! ```text
-//! git clone git@github.com:56quarters/nws_exporter.git && cd nws_exporter
+//! git clone git@github.com:jgrig472/nws_exporter-with-noaa-water-gauge-support.git && cd nws_exporter-with-noaa-water-gauge-support
 //! cargo build --release
 //! ```
 //!
