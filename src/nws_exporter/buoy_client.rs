@@ -19,6 +19,7 @@
 
 use reqwest::header::USER_AGENT;
 use reqwest::{Client, Response, StatusCode, Url};
+use std::collections::HashMap;
 use std::error;
 use std::fmt;
 
@@ -65,19 +66,25 @@ impl error::Error for BuoyClientError {
 pub struct BuoyClient {
     client: Client,
     base_url: Url,
+    station_table_url: Url,
 }
 
 impl BuoyClient {
     const USER_AGENT: &'static str = "nws_exporter/0.6.1 (https://github.com/56quarters/nws_exporter)";
 
-    /// Create a new `BuoyClient` from the provided reqwest client and base URL for the NDBC
-    /// realtime2 data feed (typically `https://www.ndbc.noaa.gov/data/realtime2/`).
-    pub fn new(client: Client, base_url: &str) -> Result<Self, BuoyClientError> {
+    /// Create a new `BuoyClient` from the provided reqwest client, base URL for the NDBC
+    /// realtime2 data feed (typically `https://www.ndbc.noaa.gov/data/realtime2/`), and URL
+    /// for the NDBC station metadata table (typically
+    /// `https://www.ndbc.noaa.gov/data/stations/station_table.txt`).
+    pub fn new(client: Client, base_url: &str, station_table_url: &str) -> Result<Self, BuoyClientError> {
         Ok(BuoyClient {
             client,
             base_url: base_url
                 .parse()
                 .map_err(|e| BuoyClientError::Initialization(format!("cannot parse {}: {}", base_url, e)))?,
+            station_table_url: station_table_url
+                .parse()
+                .map_err(|e| BuoyClientError::Initialization(format!("cannot parse {}: {}", station_table_url, e)))?,
         })
     }
 
@@ -89,6 +96,30 @@ impl BuoyClient {
         let res = self.make_request(station_id, url).await?;
         let body = res.text().await.map_err(BuoyClientError::Internal)?;
         parse_latest_observation(station_id, &body)
+    }
+
+    /// Fetch the NDBC station metadata table and return a map of station ID (uppercase) to
+    /// friendly station name (e.g. `"45186"` -> `"Waukegan Buoy, IL"`). Stations with no name
+    /// in the table are omitted from the returned map.
+    pub async fn station_names(&self) -> Result<HashMap<String, String>, BuoyClientError> {
+        let url = self.station_table_url.clone();
+        tracing::debug!(message = "fetching buoy station names", url = %url);
+
+        let res = self
+            .client
+            .get(url.clone())
+            .header(USER_AGENT, Self::USER_AGENT)
+            .send()
+            .await
+            .map_err(BuoyClientError::Internal)?;
+
+        let status = res.status();
+        if status != StatusCode::OK {
+            return Err(BuoyClientError::Unexpected(status, url));
+        }
+
+        let body = res.text().await.map_err(BuoyClientError::Internal)?;
+        Ok(parse_station_names(&body))
     }
 
     async fn make_request<S: Into<String>>(&self, station_id: S, url: Url) -> Result<Response, BuoyClientError> {
@@ -159,6 +190,36 @@ fn parse_latest_observation(station_id: &str, body: &str) -> Result<BuoyObservat
         pressure_tendency_hpa: fields.get(17).copied().and_then(ndbc_field),
         tide_feet: fields.get(18).copied().and_then(ndbc_field),
     })
+}
+
+/// Parse the NDBC station metadata table into a map of station ID (uppercase) to friendly name.
+///
+/// The table is pipe-delimited with one station per line, in the form
+/// `STATION_ID|OWNER|TTYPE|HULL|NAME|PAYLOAD|LOCATION|TIMEZONE|FORECAST|NOTE`, preceded by
+/// comment lines starting with `#`. Stations with no `NAME` value are omitted.
+fn parse_station_names(body: &str) -> HashMap<String, String> {
+    let mut names = HashMap::new();
+
+    for line in body.lines() {
+        if line.starts_with('#') || line.trim().is_empty() {
+            continue;
+        }
+
+        let fields: Vec<&str> = line.split('|').collect();
+        if fields.len() < 5 {
+            continue;
+        }
+
+        let id = fields[0].trim();
+        let name = fields[4].trim();
+        if id.is_empty() || name.is_empty() {
+            continue;
+        }
+
+        names.insert(id.to_uppercase(), name.to_string());
+    }
+
+    names
 }
 
 /// Parse a single NDBC column, treating the "MM" (missing measurement) sentinel as `None`.
@@ -250,8 +311,31 @@ mod tests {
 
     #[test]
     fn test_observation_url_uppercases_station() {
-        let client = BuoyClient::new(Client::new(), "https://www.ndbc.noaa.gov/data/realtime2/").unwrap();
+        let client = BuoyClient::new(
+            Client::new(),
+            "https://www.ndbc.noaa.gov/data/realtime2/",
+            "https://www.ndbc.noaa.gov/data/stations/station_table.txt",
+        )
+        .unwrap();
         let url = client.observation_url("sdbc1");
         assert_eq!(url.as_str(), "https://www.ndbc.noaa.gov/data/realtime2/SDBC1.txt");
+    }
+
+    #[test]
+    fn test_parse_station_names() {
+        let body = "\
+# STATION_ID | OWNER | TTYPE | HULL | NAME | PAYLOAD | LOCATION | TIMEZONE | FORECAST | NOTE
+#
+45175|MT|Buoy||Mackinac Straits West, Mackinaw City, MI ||45.825 N 84.772 W|E|FZUS53.KAPX |
+45187|UC|Moored Buoy||Winthrop Harbor Buoy, IL||42.491 N 87.779 W|C|FZUS53.KMKX |
+14040|RM|Atlas Buoy||||8.000 S 67.000 E||  |
+";
+        let names = parse_station_names(body);
+        assert_eq!(
+            names.get("45175").map(String::as_str),
+            Some("Mackinac Straits West, Mackinaw City, MI")
+        );
+        assert_eq!(names.get("45187").map(String::as_str), Some("Winthrop Harbor Buoy, IL"));
+        assert_eq!(names.get("14040"), None);
     }
 }

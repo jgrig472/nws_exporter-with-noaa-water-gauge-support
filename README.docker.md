@@ -57,7 +57,9 @@ Water gauge metrics (prefixed `nws_water_`): gauge metadata, current stage (feet
 and action/minor/moderate/major flood stage thresholds (feet).
 
 Buoy metrics (prefixed `nws_buoy_`): station metadata, wind speed/gust/direction, wave height/period/
-direction, pressure (and tendency), air/water temperature, dewpoint, visibility, and tide.
+direction, pressure (and tendency), air/water temperature, dewpoint, visibility, and tide. Every buoy
+metric carries a `buoy_name` label with the station's friendly name, looked up from the NDBC station
+metadata table (empty if the station isn't found there).
 
 ## [Prometheus] scrape config
 
