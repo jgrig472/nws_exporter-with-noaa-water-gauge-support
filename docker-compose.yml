@@ -2,7 +2,7 @@ services:
   nws-exporter:
     container_name: nws-exporter
     image: jasona1246/nws_exporter-with-noaa-water-gauge-support:latest
-    command: nws_exporter KBOS --gauge dspi2
+    command: nws_exporter KBOS --gauge dspi2 --buoy 45186
     ports:
       - 9782:9782
     restart: always

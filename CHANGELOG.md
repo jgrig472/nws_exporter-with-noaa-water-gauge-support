@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.6.0 - 2026-06-21
+
+* Add support for NOAA NDBC buoy and coastal weather station observations via the new `--buoy`
+  flag (repeatable, combinable with `--gauge` and NWS stations), fetched from NDBC's `realtime2`
+  data feed.
+* Add `nws_buoy_*` Prometheus metrics for wind speed/gust/direction, wave height/period/direction,
+  pressure (and tendency), air/water temperature, dewpoint, visibility, and tide.
+* Add [Grafana dashboard](ext/buoy-dashboard.json) for visualizing buoy metrics, including a wind
+  compass and wind rose panel.
+* Add [ext/README.md](ext/README.md) documenting how to install the community Grafana plugins
+  used by the new buoy dashboard.
+* Update `docker-compose.yml` example to also demonstrate the new `--buoy` flag.
+
 ## v0.5.1 - 2023-10-21
 
 * Dependency updates. #23

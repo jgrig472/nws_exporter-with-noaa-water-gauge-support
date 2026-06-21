@@ -20,6 +20,8 @@
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
+use nws_exporter::buoy_client::{BuoyClient, BuoyClientError};
+use nws_exporter::buoy_metrics::BuoyMetrics;
 use nws_exporter::client::{ClientError, NwsClient};
 use nws_exporter::http::RequestState;
 use nws_exporter::metrics::ForecastMetrics;
@@ -42,15 +44,17 @@ const DEFAULT_REFERSH_SECS: u64 = 300;
 const DEFAULT_TIMEOUT_MILLIS: u64 = 5000;
 const DEFAULT_API_URL: &str = "https://api.weather.gov/";
 const DEFAULT_WATER_API_URL: &str = "https://api.water.noaa.gov/nwps/v1/";
+const DEFAULT_BUOY_API_URL: &str = "https://www.ndbc.noaa.gov/data/realtime2/";
 
-/// Export National Weather Service forecasts and NOAA water gauge levels as Prometheus metrics
+/// Export National Weather Service forecasts, NOAA water gauge levels, and NOAA buoy
+/// observations as Prometheus metrics
 #[derive(Debug, Parser)]
 #[clap(name = "nws_exporter", version = clap::crate_version!())]
 struct NwsExporterApplication {
     /// NWS weather station ID to fetch forecasts for. Must be specified at least once and
     /// may be used multiple times (separated by spaces) to fetch forecasts for multiple NWS
     /// stations
-    #[arg(required_unless_present = "gauge")]
+    #[arg(required_unless_present_any = ["gauge", "buoy"])]
     station: Vec<String>,
 
     /// NOAA water gauge ID to fetch water level data for (e.g. "dspi2" for the Des Plaines
@@ -59,6 +63,12 @@ struct NwsExporterApplication {
     #[arg(long = "gauge")]
     gauge: Vec<String>,
 
+    /// NOAA NDBC buoy or coastal station ID to fetch observations for (e.g. "45186" for the
+    /// Waukegan buoy on Lake Michigan). May be used multiple times to monitor multiple
+    /// stations. See https://www.ndbc.noaa.gov/ to find station IDs.
+    #[arg(long = "buoy")]
+    buoy: Vec<String>,
+
     /// Base URL for the Weather.gov API
     #[arg(long, default_value_t = DEFAULT_API_URL.into())]
     api_url: String,
@@ -66,6 +76,10 @@ struct NwsExporterApplication {
     /// Base URL for the NOAA National Water Prediction Service API
     #[arg(long, default_value_t = DEFAULT_WATER_API_URL.into())]
     water_api_url: String,
+
+    /// Base URL for the NOAA NDBC realtime data feed
+    #[arg(long, default_value_t = DEFAULT_BUOY_API_URL.into())]
+    buoy_api_url: String,
 
     /// Logging verbosity. Allowed values are 'trace', 'debug', 'info', 'warn', and 'error'
     /// (case insensitive)
@@ -144,6 +158,29 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         }
 
         tokio::spawn(water_update.run());
+    }
+
+    // Buoy update task (only when buoys are provided)
+    if !opts.buoy.is_empty() {
+        let buoy_client = BuoyClient::new(http_client.clone(), &opts.buoy_api_url).unwrap_or_else(|e| {
+            tracing::error!(message = "unable to initialize buoy client", error = %e);
+            process::exit(1)
+        });
+
+        let buoy_metrics = BuoyMetrics::new(&mut registry);
+        let buoy_update = BuoyUpdateTask::new(
+            opts.buoy,
+            buoy_metrics,
+            buoy_client,
+            Duration::from_secs(opts.refresh_secs),
+        );
+
+        if let Err(e) = buoy_update.initialize().await {
+            tracing::error!(message = "failed to fetch initial buoy information", error = %e);
+            process::exit(1);
+        }
+
+        tokio::spawn(buoy_update.run());
     }
 
     let state = Arc::new(RequestState { registry });
@@ -298,6 +335,65 @@ impl WaterUpdateTask {
                     }
                     Err(e) => {
                         tracing::error!(message = "failed to fetch water gauge reading", gauge_id = %id, error = %e);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Task for periodically updating buoy/coastal station metrics for multiple NOAA NDBC stations.
+struct BuoyUpdateTask {
+    buoys: Vec<String>,
+    metrics: BuoyMetrics,
+    client: BuoyClient,
+    interval: Duration,
+}
+
+impl BuoyUpdateTask {
+    fn new(buoys: Vec<String>, metrics: BuoyMetrics, client: BuoyClient, interval: Duration) -> Self {
+        Self {
+            buoys,
+            metrics,
+            client,
+            interval,
+        }
+    }
+
+    /// Fetch the latest observation once to validate buoy IDs and populate initial metrics.
+    async fn initialize(&self) -> Result<(), BuoyClientError> {
+        for id in self.buoys.iter() {
+            let obs = self
+                .client
+                .observation(id)
+                .instrument(tracing::span!(Level::DEBUG, "buoy_observation"))
+                .await?;
+            self.metrics.update(&obs);
+            tracing::info!(message = "initialized buoy station", buoy_id = %id);
+        }
+
+        Ok(())
+    }
+
+    /// Periodically fetch the latest observation for all configured buoys and update metrics.
+    async fn run(self) -> ! {
+        let mut interval = tokio::time::interval(self.interval);
+
+        loop {
+            let _ = interval.tick().await;
+            for id in self.buoys.iter() {
+                match self
+                    .client
+                    .observation(id)
+                    .instrument(tracing::span!(Level::DEBUG, "buoy_observation"))
+                    .await
+                {
+                    Ok(obs) => {
+                        self.metrics.update(&obs);
+                        tracing::info!(message = "fetched buoy observation", buoy_id = %id);
+                    }
+                    Err(e) => {
+                        tracing::error!(message = "failed to fetch buoy observation", buoy_id = %id, error = %e);
                     }
                 }
             }

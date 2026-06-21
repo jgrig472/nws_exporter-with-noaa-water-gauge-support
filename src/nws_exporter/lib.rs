@@ -36,6 +36,29 @@
 //! [NWS station]: https://www.weather.gov/documentation/services-web-api#/default/obs_stations
 //! [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
 //!
+//! `nws_exporter` can also fetch observations for one or more [NOAA NDBC] buoys or coastal
+//! weather stations, independently of (or alongside) NWS weather stations and water gauges.
+//! The following metrics are emitted when available (not all fields are available for all
+//! stations).
+//!
+//! * `nws_buoy_station{buoy=$BUOY}` - Buoy or coastal station metadata
+//! * `nws_buoy_wind_direction_degrees{buoy=$BUOY}` - Wind direction, in degrees clockwise from true north.
+//! * `nws_buoy_wind_speed_mps{buoy=$BUOY}` - Wind speed, in meters per second.
+//! * `nws_buoy_wind_gust_mps{buoy=$BUOY}` - Peak wind gust speed, in meters per second.
+//! * `nws_buoy_wave_height_meters{buoy=$BUOY}` - Significant wave height, in meters.
+//! * `nws_buoy_dominant_wave_period_seconds{buoy=$BUOY}` - Dominant wave period, in seconds.
+//! * `nws_buoy_average_wave_period_seconds{buoy=$BUOY}` - Average wave period, in seconds.
+//! * `nws_buoy_wave_direction_degrees{buoy=$BUOY}` - Mean wave direction, in degrees clockwise from true north.
+//! * `nws_buoy_pressure_hpa{buoy=$BUOY}` - Sea level pressure, in hectopascals.
+//! * `nws_buoy_pressure_tendency_hpa{buoy=$BUOY}` - Pressure tendency over the last 3 hours, in hectopascals.
+//! * `nws_buoy_air_temperature_degrees{buoy=$BUOY}` - Air temperature, in degrees celsius.
+//! * `nws_buoy_water_temperature_degrees{buoy=$BUOY}` - Water temperature, in degrees celsius.
+//! * `nws_buoy_dewpoint_degrees{buoy=$BUOY}` - Dewpoint, in degrees celsius.
+//! * `nws_buoy_visibility_nmi{buoy=$BUOY}` - Visibility, in nautical miles.
+//! * `nws_buoy_tide_feet{buoy=$BUOY}` - Water level above or below mean lower low water, in feet.
+//!
+//! [NOAA NDBC]: https://www.ndbc.noaa.gov/
+//!
 //! ## Build
 //!
 //! `nws_exporter` is a Rust program and must be built from source using a [Rust toolchain](https://rustup.rs/).
@@ -118,6 +141,8 @@
 //! ```
 //!
 
+pub mod buoy_client;
+pub mod buoy_metrics;
 pub mod client;
 pub mod http;
 pub mod metrics;
