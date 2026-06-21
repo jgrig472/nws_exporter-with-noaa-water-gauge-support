@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.1 - 2026-06-21
+
+* Document buoy support (the new `--buoy` flag and `nws_buoy_*` metrics) in the Docker Hub
+  README, keeping the published image description in sync with v0.6.0.
+
 ## v0.6.0 - 2026-06-21
 
 * Add support for NOAA NDBC buoy and coastal weather station observations via the new `--buoy`

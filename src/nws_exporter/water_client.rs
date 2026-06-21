@@ -62,7 +62,7 @@ pub struct WaterGaugeClient {
 }
 
 impl WaterGaugeClient {
-    const USER_AGENT: &'static str = "nws_exporter/0.6.0 (https://github.com/56quarters/nws_exporter)";
+    const USER_AGENT: &'static str = "nws_exporter/0.6.1 (https://github.com/56quarters/nws_exporter)";
 
     /// Create a new `WaterGaugeClient` from the provided reqwest client and base URL for the
     /// NOAA NWPS API (typically `https://api.water.noaa.gov/nwps/v1/`).
