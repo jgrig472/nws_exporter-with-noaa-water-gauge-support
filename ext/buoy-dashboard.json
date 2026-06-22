@@ -1286,30 +1286,18 @@
     "title": "NOAA Buoys",
     "variables": [
       {
-        "kind": "QueryVariable",
+        "kind": "CustomVariable",
         "spec": {
           "name": "buoy",
-          "current": { "text": "", "value": "" },
+          "query": "Mackinac Straits West\\, Mackinaw City\\, MI : 45175,Winthrop Harbor Buoy\\, IL : 45187",
+          "current": { "text": "Mackinac Straits West, Mackinaw City, MI", "value": "45175" },
+          "options": [
+            { "text": "Mackinac Straits West, Mackinaw City, MI", "value": "45175" },
+            { "text": "Winthrop Harbor Buoy, IL", "value": "45187" }
+          ],
           "label": "Buoy",
           "hide": "dontHide",
-          "refresh": "onDashboardLoad",
           "skipUrlSync": false,
-          "query": {
-            "kind": "DataQuery",
-            "group": "prometheus",
-            "version": "v0",
-            "datasource": { "name": "PBFA97CFB590B2093" },
-            "spec": {
-              "qryType": 1,
-              "query": "query_result(nws_buoy_station)",
-              "refId": "PrometheusVariableQueryEditor-VariableQuery"
-            }
-          },
-          "regex": "/buoy=\"(?<value>[^\"]+)\".*buoy_name=\"(?<text>[^\"]+)\"/",
-          "regexApplyTo": "value",
-          "sort": "alphabeticalAsc",
-          "definition": "query_result(nws_buoy_station)",
-          "options": [],
           "multi": false,
           "includeAll": false,
           "allowCustomValue": true
