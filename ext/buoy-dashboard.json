@@ -53,7 +53,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_air_temperature_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
+                        "expr": "nws_buoy_air_temperature_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Air Temp"
                       }
                     },
@@ -114,7 +114,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_water_temperature_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
+                        "expr": "nws_buoy_water_temperature_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Water Temp"
                       }
                     },
@@ -175,7 +175,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_speed_mps{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Speed"
                       }
                     },
@@ -236,7 +236,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_gust_mps{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_wind_gust_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Gust"
                       }
                     },
@@ -297,7 +297,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_pressure_hpa{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_pressure_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Pressure"
                       }
                     },
@@ -358,7 +358,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_dewpoint_degrees{buoy=\"$buoy\"} * 9 / 5 + 32",
+                        "expr": "nws_buoy_dewpoint_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Dewpoint"
                       }
                     },
@@ -419,7 +419,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}"
+                        "expr": "nws_buoy_wind_direction_degrees{buoy_name=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
@@ -476,7 +476,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_speed_mps{buoy=\"$buoy\"}"
+                        "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
@@ -492,7 +492,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}"
+                        "expr": "nws_buoy_wind_direction_degrees{buoy_name=\"$buoy\"}"
                       }
                     },
                     "refId": "B",
@@ -503,15 +503,24 @@
               "transformations": [
                 {
                   "kind": "joinByField",
-                  "spec": { "byField": "Time", "mode": "outer" }
+                  "spec": {
+                    "id": "joinByField",
+                    "options": { "byField": "Time", "mode": "outer" }
+                  }
                 },
                 {
                   "kind": "renameByRegex",
-                  "spec": { "regex": "^Value$", "renamePattern": "wind_speed" }
+                  "spec": {
+                    "id": "renameByRegex",
+                    "options": { "regex": "^Value$", "renamePattern": "wind_speed" }
+                  }
                 },
                 {
                   "kind": "renameByRegex",
-                  "spec": { "regex": "^Value 1$", "renamePattern": "wind_direction" }
+                  "spec": {
+                    "id": "renameByRegex",
+                    "options": { "regex": "^Value 1$", "renamePattern": "wind_direction" }
+                  }
                 }
               ],
               "queryOptions": {}
@@ -551,7 +560,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_speed_mps{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Speed"
                       }
                     },
@@ -568,7 +577,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_gust_mps{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_wind_gust_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Gust"
                       }
                     },
@@ -655,7 +664,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wave_height_meters{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_wave_height_meters{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wave Height"
                       }
                     },
@@ -728,7 +737,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wave_direction_degrees{buoy=\"$buoy\"}"
+                        "expr": "nws_buoy_wave_direction_degrees{buoy_name=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
@@ -785,7 +794,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_dominant_wave_period_seconds{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_dominant_wave_period_seconds{buoy_name=\"$buoy\"}",
                         "legendFormat": "Dominant Period"
                       }
                     },
@@ -802,7 +811,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_average_wave_period_seconds{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_average_wave_period_seconds{buoy_name=\"$buoy\"}",
                         "legendFormat": "Average Period"
                       }
                     },
@@ -880,7 +889,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_pressure_hpa{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_pressure_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Pressure"
                       }
                     },
@@ -958,7 +967,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_pressure_tendency_hpa{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_pressure_tendency_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Tendency"
                       }
                     },
@@ -1036,7 +1045,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_tide_feet{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_tide_feet{buoy_name=\"$buoy\"}",
                         "legendFormat": "Tide"
                       }
                     },
@@ -1114,7 +1123,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_visibility_nmi{buoy=\"$buoy\"}",
+                        "expr": "nws_buoy_visibility_nmi{buoy_name=\"$buoy\"}",
                         "legendFormat": "Visibility"
                       }
                     },
@@ -1282,18 +1291,30 @@
     "title": "NOAA Buoys",
     "variables": [
       {
-        "kind": "CustomVariable",
+        "kind": "QueryVariable",
         "spec": {
           "name": "buoy",
-          "query": "Mackinac Straits West\\, Mackinaw City\\, MI : 45175,Winthrop Harbor Buoy\\, IL : 45187",
-          "current": { "text": "Mackinac Straits West, Mackinaw City, MI", "value": "45175" },
-          "options": [
-            { "text": "Mackinac Straits West, Mackinaw City, MI", "value": "45175" },
-            { "text": "Winthrop Harbor Buoy, IL", "value": "45187" }
-          ],
+          "current": { "text": "", "value": "" },
           "label": "Buoy",
           "hide": "dontHide",
+          "refresh": "onDashboardLoad",
           "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "prometheus",
+            "version": "v0",
+            "datasource": { "name": "PBFA97CFB590B2093" },
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(buoy_name)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "alphabeticalAsc",
+          "definition": "label_values(buoy_name)",
+          "options": [],
           "multi": false,
           "includeAll": false,
           "allowCustomValue": true
