@@ -437,7 +437,7 @@
             "version": "2.1.3",
             "spec": {
               "options": {
-                "headingField": "Value",
+                "headingField": "nws_buoy_wind_direction_degrees",
                 "showLabels": true,
                 "showHeadingValue": true,
                 "needleType": "arrow",
@@ -461,7 +461,7 @@
         "spec": {
           "id": 8,
           "title": "Wind Speed & Direction Distribution",
-          "description": "Wind rose showing the joint distribution of wind speed and direction over the selected time range. Requires the community Operato Windrose panel plugin (operato-windrose-panel), which requires fields literally named wind_speed and wind_direction — produced below by joining the two queries on time and renaming the resulting value fields.",
+          "description": "Wind rose showing the joint distribution of wind speed and direction over the selected time range. Requires the community Operato Windrose panel plugin (operato-windrose-panel), which requires fields literally named wind_speed and wind_direction in a single frame. Grafana's rename transforms only change display names, not the underlying field name, so the two queries are joined on time and then run through 'Add field from calculation' (reduceRow, single included field) to produce genuinely renamed wind_speed/wind_direction fields.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -509,17 +509,27 @@
                   }
                 },
                 {
-                  "kind": "renameByRegex",
+                  "kind": "calculateField",
                   "spec": {
-                    "id": "renameByRegex",
-                    "options": { "regex": "^Value$", "renamePattern": "wind_speed" }
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_wind_speed_mps"] },
+                      "alias": "wind_speed",
+                      "replaceFields": false
+                    }
                   }
                 },
                 {
-                  "kind": "renameByRegex",
+                  "kind": "calculateField",
                   "spec": {
-                    "id": "renameByRegex",
-                    "options": { "regex": "^Value 1$", "renamePattern": "wind_direction" }
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_wind_direction_degrees"] },
+                      "alias": "wind_direction",
+                      "replaceFields": false
+                    }
                   }
                 }
               ],
@@ -755,7 +765,7 @@
             "version": "2.1.3",
             "spec": {
               "options": {
-                "headingField": "Value",
+                "headingField": "nws_buoy_wave_direction_degrees",
                 "showLabels": true,
                 "showHeadingValue": true,
                 "needleType": "ship",
