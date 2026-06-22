@@ -37,6 +37,9 @@ lto = "thin"
 cargo-dist-version = "0.22.1"
 # CI backends to support
 ci = "github"
+# Allow the generated CI to differ from what `cargo dist generate` would produce, since the
+# ubuntu-20.04 runner this cargo-dist version defaults to was retired by GitHub
+allow-dirty = ["ci"]
 # The installers to generate for each app
 installers = []
 # Target platforms to build apps for (Rust target-triple syntax)
