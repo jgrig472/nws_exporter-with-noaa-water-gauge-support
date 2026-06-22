@@ -419,8 +419,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}",
-                        "legendFormat": "Wind Direction"
+                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
@@ -477,8 +476,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_speed_mps{buoy=\"$buoy\"}",
-                        "legendFormat": "Wind Speed"
+                        "expr": "nws_buoy_wind_speed_mps{buoy=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
@@ -494,8 +492,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}",
-                        "legendFormat": "Wind Direction"
+                        "expr": "nws_buoy_wind_direction_degrees{buoy=\"$buoy\"}"
                       }
                     },
                     "refId": "B",
@@ -505,16 +502,16 @@
               ],
               "transformations": [
                 {
-                  "id": "joinByField",
-                  "options": { "byField": "Time", "mode": "outer" }
+                  "kind": "joinByField",
+                  "spec": { "byField": "Time", "mode": "outer" }
                 },
                 {
-                  "id": "renameByRegex",
-                  "options": { "regex": "^Value$", "renamePattern": "wind_speed" }
+                  "kind": "renameByRegex",
+                  "spec": { "regex": "^Value$", "renamePattern": "wind_speed" }
                 },
                 {
-                  "id": "renameByRegex",
-                  "options": { "regex": "^Value 1$", "renamePattern": "wind_direction" }
+                  "kind": "renameByRegex",
+                  "spec": { "regex": "^Value 1$", "renamePattern": "wind_direction" }
                 }
               ],
               "queryOptions": {}
@@ -731,8 +728,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wave_direction_degrees{buoy=\"$buoy\"}",
-                        "legendFormat": "Wave Direction"
+                        "expr": "nws_buoy_wave_direction_degrees{buoy=\"$buoy\"}"
                       }
                     },
                     "refId": "A",
