@@ -233,7 +233,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             }
 
             let coords = buoy_info.get(&id).and_then(|info| Some((info.lat?, info.lon?)));
-            match coords.and_then(|(lat, lon)| nearest_station(lat, lon, &coops_stations, opts.coops_max_distance_nmi)) {
+            match coords.and_then(|(lat, lon)| nearest_station(lat, lon, &coops_stations, opts.coops_max_distance_nmi))
+            {
                 Some((coops_id, distance_nmi)) => {
                     tracing::info!(message = "matched buoy to CO-OPS tide station", buoy_id = %id, coops_id = %coops_id, distance_nmi);
                     tide_stations.insert(id, coops_id);
