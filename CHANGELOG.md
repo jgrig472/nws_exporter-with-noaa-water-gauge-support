@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.8.0 - 2026-06-23
+
+* Automatically match each `--buoy` station to the nearest NOAA CO-OPS tide station (within
+  `--coops-max-distance-nmi`, default 50 nautical miles), using published station coordinates.
+  When matched, `nws_buoy_wind_direction_degrees`/`wind_speed_mps`/`wind_gust_mps`,
+  `pressure_hpa`, `air_temperature_degrees`/`water_temperature_degrees`, and `tide_feet` are
+  sourced from CO-OPS instead of NDBC whenever CO-OPS has a reading, falling back to NDBC
+  otherwise. Buoys with no nearby CO-OPS station are unaffected.
+* Add `nws_buoy_next_high_tide_feet`, `nws_buoy_next_high_tide_timestamp_seconds`,
+  `nws_buoy_next_low_tide_feet`, and `nws_buoy_next_low_tide_timestamp_seconds` metrics, giving
+  the predicted tide schedule for buoys matched to a CO-OPS tide station (NDBC has no
+  equivalent).
+* Add a `--buoy-tide-station BUOY_ID=COOPS_STATION_ID` flag to override or supply a CO-OPS tide
+  station pairing manually, and `--coops-api-url`/`--coops-station-list-url`/
+  `--coops-max-distance-nmi` flags to configure the new CO-OPS integration.
+* Add a "Tide Predictions" row to the [Grafana buoy dashboard](ext/buoy-dashboard.json) with a
+  next-high/low tide readout and an hours-until-next-tide-event countdown graph.
+
 ## v0.7.1 - 2026-06-22
 
 * Convert the [Grafana buoy dashboard](ext/buoy-dashboard.json)'s Current Wave Height panel from

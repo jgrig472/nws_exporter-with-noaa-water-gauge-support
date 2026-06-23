@@ -23,6 +23,7 @@ use clap::Parser;
 use nws_exporter::buoy_client::{BuoyClient, BuoyClientError};
 use nws_exporter::buoy_metrics::BuoyMetrics;
 use nws_exporter::client::{ClientError, NwsClient};
+use nws_exporter::coops_client::{nearest_station, CoOpsClient};
 use nws_exporter::http::RequestState;
 use nws_exporter::metrics::ForecastMetrics;
 use nws_exporter::water_client::{WaterClientError, WaterGaugeClient};
@@ -47,6 +48,10 @@ const DEFAULT_API_URL: &str = "https://api.weather.gov/";
 const DEFAULT_WATER_API_URL: &str = "https://api.water.noaa.gov/nwps/v1/";
 const DEFAULT_BUOY_API_URL: &str = "https://www.ndbc.noaa.gov/data/realtime2/";
 const DEFAULT_BUOY_STATION_TABLE_URL: &str = "https://www.ndbc.noaa.gov/data/stations/station_table.txt";
+const DEFAULT_COOPS_API_URL: &str = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter";
+const DEFAULT_COOPS_STATION_LIST_URL: &str =
+    "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions";
+const DEFAULT_COOPS_MAX_DISTANCE_NMI: f64 = 50.0;
 
 /// Export National Weather Service forecasts, NOAA water gauge levels, and NOAA buoy
 /// observations as Prometheus metrics
@@ -87,6 +92,27 @@ struct NwsExporterApplication {
     /// `--buoy` stations
     #[arg(long, default_value_t = DEFAULT_BUOY_STATION_TABLE_URL.into())]
     buoy_station_table_url: String,
+
+    /// Base URL for the NOAA CO-OPS Tides & Currents `datagetter` API
+    #[arg(long, default_value_t = DEFAULT_COOPS_API_URL.into())]
+    coops_api_url: String,
+
+    /// URL for the NOAA CO-OPS tide-prediction station metadata list, used to auto-match
+    /// `--buoy` stations to a nearby CO-OPS tide station
+    #[arg(long, default_value_t = DEFAULT_COOPS_STATION_LIST_URL.into())]
+    coops_station_list_url: String,
+
+    /// Maximum distance, in nautical miles, for auto-matching a `--buoy` station to a NOAA
+    /// CO-OPS tide station. Buoys with no CO-OPS station within this distance are left
+    /// NDBC-only
+    #[arg(long, default_value_t = DEFAULT_COOPS_MAX_DISTANCE_NMI)]
+    coops_max_distance_nmi: f64,
+
+    /// Force a specific NOAA CO-OPS tide station for a `--buoy` station, overriding (or
+    /// supplying, if auto-matching found none) the automatic nearest-station match. Format is
+    /// `BUOY_ID=COOPS_STATION_ID` (e.g. "44013=8443970"). May be used multiple times
+    #[arg(long = "buoy-tide-station")]
+    buoy_tide_station: Vec<String>,
 
     /// Logging verbosity. Allowed values are 'trace', 'debug', 'info', 'warn', and 'error'
     /// (case insensitive)
@@ -175,10 +201,48 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 process::exit(1)
             });
 
-        let buoy_names = buoy_client.station_names().await.unwrap_or_else(|e| {
+        let buoy_info = buoy_client.station_info().await.unwrap_or_else(|e| {
             tracing::warn!(message = "failed to fetch buoy station names, buoy_name label will be empty", error = %e);
             HashMap::new()
         });
+        let buoy_names = buoy_info
+            .iter()
+            .map(|(id, info)| (id.clone(), info.name.clone()))
+            .collect::<HashMap<_, _>>();
+
+        let coops_client = CoOpsClient::new(http_client.clone(), &opts.coops_api_url, &opts.coops_station_list_url)
+            .unwrap_or_else(|e| {
+                tracing::error!(message = "unable to initialize CO-OPS client", error = %e);
+                process::exit(1)
+            });
+
+        let mut tide_stations: HashMap<String, String> = HashMap::new();
+        for entry in &opts.buoy_tide_station {
+            let (buoy_id, coops_id) = entry.split_once('=').unwrap_or_else(|| {
+                tracing::error!(message = "invalid --buoy-tide-station entry, expected BUOY_ID=COOPS_ID", entry = %entry);
+                process::exit(1)
+            });
+            tide_stations.insert(buoy_id.to_uppercase(), coops_id.to_string());
+        }
+
+        let coops_stations = coops_client.station_list().await;
+        for id in opts.buoy.iter() {
+            let id = id.to_uppercase();
+            if tide_stations.contains_key(&id) {
+                continue;
+            }
+
+            let coords = buoy_info.get(&id).and_then(|info| Some((info.lat?, info.lon?)));
+            match coords.and_then(|(lat, lon)| nearest_station(lat, lon, &coops_stations, opts.coops_max_distance_nmi)) {
+                Some((coops_id, distance_nmi)) => {
+                    tracing::info!(message = "matched buoy to CO-OPS tide station", buoy_id = %id, coops_id = %coops_id, distance_nmi);
+                    tide_stations.insert(id, coops_id);
+                }
+                None => {
+                    tracing::info!(message = "no nearby CO-OPS tide station found for buoy, NDBC-only", buoy_id = %id);
+                }
+            }
+        }
 
         let buoy_metrics = BuoyMetrics::new(&mut registry);
         let buoy_update = BuoyUpdateTask::new(
@@ -186,6 +250,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             buoy_metrics,
             buoy_client,
             buoy_names,
+            coops_client,
+            tide_stations,
             Duration::from_secs(opts.refresh_secs),
         );
 
@@ -362,6 +428,8 @@ struct BuoyUpdateTask {
     metrics: BuoyMetrics,
     client: BuoyClient,
     names: HashMap<String, String>,
+    coops_client: CoOpsClient,
+    tide_stations: HashMap<String, String>,
     interval: Duration,
 }
 
@@ -371,6 +439,8 @@ impl BuoyUpdateTask {
         metrics: BuoyMetrics,
         client: BuoyClient,
         names: HashMap<String, String>,
+        coops_client: CoOpsClient,
+        tide_stations: HashMap<String, String>,
         interval: Duration,
     ) -> Self {
         Self {
@@ -378,12 +448,30 @@ impl BuoyUpdateTask {
             metrics,
             client,
             names,
+            coops_client,
+            tide_stations,
             interval,
         }
     }
 
     fn name_for(&self, station_id: &str) -> &str {
         self.names.get(station_id).map(String::as_str).unwrap_or("")
+    }
+
+    /// Update buoy metrics from an NDBC observation, then overlay higher-precision CO-OPS data
+    /// (including tide predictions) if this buoy was matched to a CO-OPS tide station.
+    async fn update(&self, obs: &nws_exporter::buoy_client::BuoyObservation) {
+        let name = self.name_for(&obs.station_id);
+        self.metrics.update(obs, name);
+
+        if let Some(coops_id) = self.tide_stations.get(&obs.station_id) {
+            let coops_obs = self
+                .coops_client
+                .observation(coops_id)
+                .instrument(tracing::span!(Level::DEBUG, "coops_observation"))
+                .await;
+            self.metrics.apply_coops(&obs.station_id, name, &coops_obs);
+        }
     }
 
     /// Fetch the latest observation once to validate buoy IDs and populate initial metrics.
@@ -394,7 +482,7 @@ impl BuoyUpdateTask {
                 .observation(id)
                 .instrument(tracing::span!(Level::DEBUG, "buoy_observation"))
                 .await?;
-            self.metrics.update(&obs, self.name_for(&obs.station_id));
+            self.update(&obs).await;
             tracing::info!(message = "initialized buoy station", buoy_id = %id);
         }
 
@@ -415,7 +503,7 @@ impl BuoyUpdateTask {
                     .await
                 {
                     Ok(obs) => {
-                        self.metrics.update(&obs, self.name_for(&obs.station_id));
+                        self.update(&obs).await;
                         tracing::info!(message = "fetched buoy observation", buoy_id = %id);
                     }
                     Err(e) => {

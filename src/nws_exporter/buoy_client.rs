@@ -71,7 +71,7 @@ pub struct BuoyClient {
 
 impl BuoyClient {
     const USER_AGENT: &'static str =
-        "nws_exporter/0.7.0 (https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support)";
+        "nws_exporter/0.8.0 (https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support)";
 
     /// Create a new `BuoyClient` from the provided reqwest client, base URL for the NDBC
     /// realtime2 data feed (typically `https://www.ndbc.noaa.gov/data/realtime2/`), and URL
@@ -100,9 +100,9 @@ impl BuoyClient {
     }
 
     /// Fetch the NDBC station metadata table and return a map of station ID (uppercase) to
-    /// friendly station name (e.g. `"45186"` -> `"Waukegan Buoy, IL"`). Stations with no name
-    /// in the table are omitted from the returned map.
-    pub async fn station_names(&self) -> Result<HashMap<String, String>, BuoyClientError> {
+    /// `BuoyStationInfo` (friendly name and, when parseable, coordinates). Stations with no
+    /// name in the table are omitted from the returned map.
+    pub async fn station_info(&self) -> Result<HashMap<String, BuoyStationInfo>, BuoyClientError> {
         let url = self.station_table_url.clone();
         tracing::debug!(message = "fetching buoy station names", url = %url);
 
@@ -120,7 +120,7 @@ impl BuoyClient {
         }
 
         let body = res.text().await.map_err(BuoyClientError::Internal)?;
-        Ok(parse_station_names(&body))
+        Ok(parse_station_info(&body))
     }
 
     async fn make_request<S: Into<String>>(&self, station_id: S, url: Url) -> Result<Response, BuoyClientError> {
@@ -193,13 +193,17 @@ fn parse_latest_observation(station_id: &str, body: &str) -> Result<BuoyObservat
     })
 }
 
-/// Parse the NDBC station metadata table into a map of station ID (uppercase) to friendly name.
+/// Parse the NDBC station metadata table into a map of station ID (uppercase) to
+/// `BuoyStationInfo`.
 ///
 /// The table is pipe-delimited with one station per line, in the form
 /// `STATION_ID|OWNER|TTYPE|HULL|NAME|PAYLOAD|LOCATION|TIMEZONE|FORECAST|NOTE`, preceded by
-/// comment lines starting with `#`. Stations with no `NAME` value are omitted.
-fn parse_station_names(body: &str) -> HashMap<String, String> {
-    let mut names = HashMap::new();
+/// comment lines starting with `#`. Stations with no `NAME` value are omitted. The `LOCATION`
+/// field (e.g. `"42.346 N 70.651 W (42°20'44" N 70°39'4" W)"`) is parsed for coordinates when
+/// possible; if it's missing or malformed, the station is still included with `lat`/`lon` set
+/// to `None`.
+fn parse_station_info(body: &str) -> HashMap<String, BuoyStationInfo> {
+    let mut stations = HashMap::new();
 
     for line in body.lines() {
         if line.starts_with('#') || line.trim().is_empty() {
@@ -217,10 +221,43 @@ fn parse_station_names(body: &str) -> HashMap<String, String> {
             continue;
         }
 
-        names.insert(id.to_uppercase(), name.to_string());
+        let (lat, lon) = fields
+            .get(6)
+            .map(|loc| parse_location(loc.trim()))
+            .unwrap_or((None, None));
+
+        stations.insert(
+            id.to_uppercase(),
+            BuoyStationInfo {
+                name: name.to_string(),
+                lat,
+                lon,
+            },
+        );
     }
 
-    names
+    stations
+}
+
+/// Parse the leading decimal-degrees portion of an NDBC `LOCATION` field, e.g.
+/// `"42.346 N 70.651 W (42°20'44" N 70°39'4" W)"` -> `(Some(42.346), Some(-70.651))`.
+/// Returns `(None, None)` if the field doesn't start with a recognizable coordinate pair.
+fn parse_location(location: &str) -> (Option<f64>, Option<f64>) {
+    let tokens: Vec<&str> = location.split_whitespace().take(4).collect();
+    if tokens.len() < 4 {
+        return (None, None);
+    }
+
+    let lat = tokens[0].parse::<f64>().ok().map(|v| match tokens[1] {
+        "S" => -v,
+        _ => v,
+    });
+    let lon = tokens[2].parse::<f64>().ok().map(|v| match tokens[3] {
+        "W" => -v,
+        _ => v,
+    });
+
+    (lat, lon)
 }
 
 /// Parse a single NDBC column, treating the "MM" (missing measurement) sentinel as `None`.
@@ -253,6 +290,15 @@ pub struct BuoyObservation {
     pub visibility_nmi: Option<f64>,
     pub pressure_tendency_hpa: Option<f64>,
     pub tide_feet: Option<f64>,
+}
+
+/// Friendly name and coordinates for an NDBC buoy or coastal station, as parsed from the
+/// station metadata table.
+#[derive(Debug, Clone, PartialEq)]
+pub struct BuoyStationInfo {
+    pub name: String,
+    pub lat: Option<f64>,
+    pub lon: Option<f64>,
 }
 
 #[cfg(test)]
@@ -323,20 +369,37 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_station_names() {
+    fn test_parse_station_info() {
         let body = "\
 # STATION_ID | OWNER | TTYPE | HULL | NAME | PAYLOAD | LOCATION | TIMEZONE | FORECAST | NOTE
 #
 45175|MT|Buoy||Mackinac Straits West, Mackinaw City, MI ||45.825 N 84.772 W|E|FZUS53.KAPX |
 45187|UC|Moored Buoy||Winthrop Harbor Buoy, IL||42.491 N 87.779 W|C|FZUS53.KMKX |
+51000|RM|Atlas Buoy||Honolulu Buoy, HI||19.000 S 159.000 W|H|FZPH51.PHFO |
 14040|RM|Atlas Buoy||||8.000 S 67.000 E||  |
 ";
-        let names = parse_station_names(body);
-        assert_eq!(
-            names.get("45175").map(String::as_str),
-            Some("Mackinac Straits West, Mackinaw City, MI")
-        );
-        assert_eq!(names.get("45187").map(String::as_str), Some("Winthrop Harbor Buoy, IL"));
-        assert_eq!(names.get("14040"), None);
+        let stations = parse_station_info(body);
+
+        let mackinac = stations.get("45175").unwrap();
+        assert_eq!(mackinac.name, "Mackinac Straits West, Mackinaw City, MI");
+        assert_eq!(mackinac.lat, Some(45.825));
+        assert_eq!(mackinac.lon, Some(-84.772));
+
+        let winthrop = stations.get("45187").unwrap();
+        assert_eq!(winthrop.name, "Winthrop Harbor Buoy, IL");
+        assert_eq!(winthrop.lat, Some(42.491));
+        assert_eq!(winthrop.lon, Some(-87.779));
+
+        let honolulu = stations.get("51000").unwrap();
+        assert_eq!(honolulu.lat, Some(-19.0));
+        assert_eq!(honolulu.lon, Some(-159.0));
+
+        assert_eq!(stations.get("14040"), None);
+    }
+
+    #[test]
+    fn test_parse_location_malformed() {
+        assert_eq!(parse_location(""), (None, None));
+        assert_eq!(parse_location("not a location"), (None, None));
     }
 }
