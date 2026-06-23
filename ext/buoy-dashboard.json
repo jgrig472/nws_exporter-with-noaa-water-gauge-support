@@ -674,7 +674,7 @@
                       "version": "v0",
                       "datasource": { "name": "PBFA97CFB590B2093" },
                       "spec": {
-                        "expr": "nws_buoy_wave_height_meters{buoy_name=\"$buoy\"}",
+                        "expr": "nws_buoy_wave_height_meters{buoy_name=\"$buoy\"} * 3.28084",
                         "legendFormat": "Wave Height"
                       }
                     },
@@ -707,16 +707,16 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "lengthm",
+                  "unit": "lengthft",
                   "min": 0,
-                  "max": 3,
+                  "max": 10,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       { "value": 0, "color": "green" },
-                      { "value": 0.5, "color": "yellow" },
-                      { "value": 1.5, "color": "orange" },
-                      { "value": 2.5, "color": "red" }
+                      { "value": 1.6, "color": "yellow" },
+                      { "value": 4.9, "color": "orange" },
+                      { "value": 8.2, "color": "red" }
                     ]
                   },
                   "color": { "mode": "thresholds" }

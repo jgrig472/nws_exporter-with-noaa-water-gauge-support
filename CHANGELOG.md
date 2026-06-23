@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.1 - 2026-06-22
+
+* Convert the [Grafana buoy dashboard](ext/buoy-dashboard.json)'s Current Wave Height panel from
+  meters to feet, so it displays consistently with the dashboard's other length panels (e.g. Tide).
+
 ## v0.7.0 - 2026-06-21
 
 * Add a `buoy_name` label to all `nws_buoy_*` metrics with the station's friendly name (e.g.
