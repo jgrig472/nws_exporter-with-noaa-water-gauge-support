@@ -1040,7 +1040,7 @@
         "spec": {
           "id": 15,
           "title": "Water Level / Tide (ft)",
-          "description": "Only reported by coastal NDBC stations with a tide sensor.",
+          "description": "Only reported by coastal NDBC stations with a tide sensor. Sourced from NOAA CO-OPS instead, for buoys matched to a nearby tide station.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1190,6 +1190,241 @@
             }
           }
         }
+      },
+      "panel-17": {
+        "kind": "Panel",
+        "spec": {
+          "id": 17,
+          "title": "Next Tide",
+          "description": "Predicted next high and low tide, for buoys matched to a nearby NOAA CO-OPS tide station.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "nws_buoy_next_high_tide_feet{buoy_name=\"$buoy\"}",
+                        "legendFormat": "Next High"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "nws_buoy_next_high_tide_timestamp_seconds{buoy_name=\"$buoy\"} * 1000",
+                        "legendFormat": "Next High Time"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "nws_buoy_next_low_tide_feet{buoy_name=\"$buoy\"}",
+                        "legendFormat": "Next Low"
+                      }
+                    },
+                    "refId": "C",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "nws_buoy_next_low_tide_timestamp_seconds{buoy_name=\"$buoy\"} * 1000",
+                        "legendFormat": "Next Low Time"
+                      }
+                    },
+                    "refId": "D",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.0.2",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "lengthft",
+                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
+                  "color": { "mode": "fixed", "fixedColor": "blue" }
+                },
+                "overrides": [
+                  {
+                    "matcher": { "id": "byName", "options": "Next High Time" },
+                    "properties": [
+                      { "id": "unit", "value": "dateTimeFromNow" },
+                      { "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }
+                    ]
+                  },
+                  {
+                    "matcher": { "id": "byName", "options": "Next Low" },
+                    "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+                  },
+                  {
+                    "matcher": { "id": "byName", "options": "Next Low Time" },
+                    "properties": [
+                      { "id": "unit", "value": "dateTimeFromNow" },
+                      { "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-18": {
+        "kind": "Panel",
+        "spec": {
+          "id": 18,
+          "title": "Hours Until Next Tide Event",
+          "description": "Time remaining until the next predicted high and low tide; resets when each event passes. For buoys matched to a nearby NOAA CO-OPS tide station.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "(nws_buoy_next_high_tide_timestamp_seconds{buoy_name=\"$buoy\"} - time()) / 3600",
+                        "legendFormat": "Until High"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": {
+                        "expr": "(nws_buoy_next_low_tide_timestamp_seconds{buoy_name=\"$buoy\"} - time()) / 3600",
+                        "legendFormat": "Until Low"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.0.2",
+            "spec": {
+              "options": {
+                "annotations": { "clustering": -1, "multiLane": false },
+                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+                "tooltip": { "hideZeros": false, "mode": "multi", "sort": "none" }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "h",
+                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
+                  "color": { "mode": "palette-classic" },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": { "type": "linear" },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": { "group": "A", "mode": "none" },
+                    "thresholdsStyle": { "mode": "off" }
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": { "id": "byName", "options": "Until High" },
+                    "properties": [{ "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }]
+                  },
+                  {
+                    "matcher": { "id": "byName", "options": "Until Low" },
+                    "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "layout": {
@@ -1277,6 +1512,22 @@
                   "items": [
                     { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 12, "height": 7, "element": { "kind": "ElementReference", "name": "panel-15" } } },
                     { "kind": "GridLayoutItem", "spec": { "x": 12, "y": 0, "width": 12, "height": 7, "element": { "kind": "ElementReference", "name": "panel-16" } } }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "title": "Tide Predictions",
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 8, "height": 7, "element": { "kind": "ElementReference", "name": "panel-17" } } },
+                    { "kind": "GridLayoutItem", "spec": { "x": 8, "y": 0, "width": 16, "height": 7, "element": { "kind": "ElementReference", "name": "panel-18" } } }
                   ]
                 }
               }

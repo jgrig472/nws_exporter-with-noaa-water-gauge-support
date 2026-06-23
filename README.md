@@ -57,11 +57,33 @@ station metadata table; it is empty for stations not found in that table.
 * `nws_buoy_dewpoint_degrees{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Dewpoint, in degrees celsius.
 * `nws_buoy_visibility_nmi{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Visibility, in nautical miles.
 * `nws_buoy_tide_feet{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Water level above or below mean lower low water, in feet.
+* `nws_buoy_next_high_tide_feet{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted height of the next high tide, in feet.
+* `nws_buoy_next_high_tide_timestamp_seconds{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted time of the next high tide, as a unix timestamp.
+* `nws_buoy_next_low_tide_feet{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted height of the next low tide, in feet.
+* `nws_buoy_next_low_tide_timestamp_seconds{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted time of the next low tide, as a unix timestamp.
+
+`nws_exporter` automatically matches each `--buoy` station to the nearest [NOAA CO-OPS] tide station (within
+`--coops-max-distance-nmi`, default 50 nautical miles), using each station's published coordinates. When a match is
+found, `wind_direction`/`wind_speed`/`wind_gust`, `pressure`, `air_temp`/`water_temp`, and `tide` are sourced from
+CO-OPS instead of NDBC whenever CO-OPS has a reading for that field (falling back to NDBC otherwise), and the four
+tide-prediction metrics above are populated from CO-OPS's tide predictions. Buoys with no CO-OPS station within
+range are unaffected and behave exactly as without this feature.
+
+The automatic match can be overridden (or supplied, if no nearby station was found) with `--buoy-tide-station
+BUOY_ID=COOPS_STATION_ID`, repeatable for multiple buoys:
+
+```text
+./nws_exporter --buoy 44013 --buoy-tide-station 44013=8443970
+```
+
+Check the `nws_exporter` startup logs for an `INFO` line per buoy reporting the matched CO-OPS station and distance
+(or that none was found), to verify or correct a match.
 
 [NWS station]: https://www.weather.gov/documentation/services-web-api#/default/obs_stations
 [api.weather.gov]: https://www.weather.gov/documentation/services-web-api
 [NOAA National Water Prediction Service API]: https://water.noaa.gov/
 [NOAA NDBC]: https://www.ndbc.noaa.gov/
+[NOAA CO-OPS]: https://tidesandcurrents.noaa.gov/
 
 ## Install
 
@@ -179,7 +201,11 @@ Buoys can also be combined with one or more NWS weather stations and water gauge
 ./nws_exporter KBOS --gauge dspi2 --buoy 45186 --buoy sdbc1
 ```
 
+Coastal/ocean buoys are automatically matched to the nearest [NOAA CO-OPS] tide station, if there is one nearby; see
+the [Features](#features) section above for details and the `--buoy-tide-station` override flag.
+
 [ndbc.noaa.gov]: https://www.ndbc.noaa.gov/
+[NOAA CO-OPS]: https://tidesandcurrents.noaa.gov/
 
 ### Run
 

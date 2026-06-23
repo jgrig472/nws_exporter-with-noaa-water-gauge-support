@@ -18,6 +18,7 @@
 //
 
 use crate::buoy_client::BuoyObservation;
+use crate::coops_client::CoOpsObservation;
 use prometheus_client::encoding::EncodeLabelSet;
 use prometheus_client::metrics::family::Family;
 use prometheus_client::metrics::gauge::Gauge;
@@ -52,6 +53,16 @@ struct BuoyLabels {
 /// - `nws_buoy_dewpoint_degrees` - dewpoint, in degrees celsius
 /// - `nws_buoy_visibility_nmi` - visibility, in nautical miles
 /// - `nws_buoy_tide_feet` - water level above or below mean lower low water, in feet
+/// - `nws_buoy_next_high_tide_feet` - predicted height of the next high tide, in feet
+/// - `nws_buoy_next_high_tide_timestamp_seconds` - predicted time of the next high tide, as a unix timestamp
+/// - `nws_buoy_next_low_tide_feet` - predicted height of the next low tide, in feet
+/// - `nws_buoy_next_low_tide_timestamp_seconds` - predicted time of the next low tide, as a unix timestamp
+///
+/// For buoys matched to a nearby NOAA CO-OPS tide station (see `--buoy-tide-station` and
+/// `--coops-max-distance-nmi`), `wind_direction`/`wind_speed`/`wind_gust`, `pressure`,
+/// `air_temp`, `water_temp`, and `tide` are sourced from CO-OPS instead of NDBC whenever CO-OPS
+/// has a reading, via `apply_coops()`. The four tide-prediction metrics have no NDBC equivalent
+/// and are only ever populated via `apply_coops()`.
 pub struct BuoyMetrics {
     station: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     wind_direction: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
@@ -68,6 +79,10 @@ pub struct BuoyMetrics {
     dewpoint: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     visibility: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     tide: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    next_high_tide_feet: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    next_high_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    next_low_tide_feet: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    next_low_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
 }
 
 impl BuoyMetrics {
@@ -88,6 +103,10 @@ impl BuoyMetrics {
         let dewpoint = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let visibility = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let tide = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let next_high_tide_feet = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let next_high_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let next_low_tide_feet = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let next_low_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
 
         reg.register("nws_buoy_station", "Buoy or coastal station metadata", station.clone());
         reg.register(
@@ -160,6 +179,26 @@ impl BuoyMetrics {
             "Water level above or below mean lower low water, in feet",
             tide.clone(),
         );
+        reg.register(
+            "nws_buoy_next_high_tide_feet",
+            "Predicted height of the next high tide, in feet",
+            next_high_tide_feet.clone(),
+        );
+        reg.register(
+            "nws_buoy_next_high_tide_timestamp_seconds",
+            "Predicted time of the next high tide, as a unix timestamp",
+            next_high_tide_timestamp.clone(),
+        );
+        reg.register(
+            "nws_buoy_next_low_tide_feet",
+            "Predicted height of the next low tide, in feet",
+            next_low_tide_feet.clone(),
+        );
+        reg.register(
+            "nws_buoy_next_low_tide_timestamp_seconds",
+            "Predicted time of the next low tide, as a unix timestamp",
+            next_low_tide_timestamp.clone(),
+        );
 
         Self {
             station,
@@ -177,6 +216,10 @@ impl BuoyMetrics {
             dewpoint,
             visibility,
             tide,
+            next_high_tide_feet,
+            next_high_tide_timestamp,
+            next_low_tide_feet,
+            next_low_tide_timestamp,
         }
     }
 
@@ -232,6 +275,51 @@ impl BuoyMetrics {
         }
         if let Some(v) = obs.tide_feet {
             self.tide.get_or_create(&labels).set(v);
+        }
+    }
+
+    /// Override wind, pressure, air/water temperature, and tide with higher-precision NOAA
+    /// CO-OPS readings, and populate the next-high/low tide prediction metrics. Should be
+    /// called after `update()` for buoys matched to a CO-OPS station; fields where `coops` has
+    /// no reading are left as whatever `update()` already set from NDBC.
+    pub fn apply_coops(&self, station_id: &str, name: &str, coops: &CoOpsObservation) {
+        let labels = BuoyLabels {
+            buoy: station_id.to_string(),
+            buoy_name: name.to_string(),
+        };
+
+        if let Some(v) = coops.wind_direction_degrees {
+            self.wind_direction.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.wind_speed_mps {
+            self.wind_speed.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.wind_gust_mps {
+            self.wind_gust.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.pressure_hpa {
+            self.pressure.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.air_temp_celsius {
+            self.air_temp.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.water_temp_celsius {
+            self.water_temp.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.tide_feet {
+            self.tide.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.next_high_tide_feet {
+            self.next_high_tide_feet.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.next_high_tide_unix {
+            self.next_high_tide_timestamp.get_or_create(&labels).set(v as f64);
+        }
+        if let Some(v) = coops.next_low_tide_feet {
+            self.next_low_tide_feet.get_or_create(&labels).set(v);
+        }
+        if let Some(v) = coops.next_low_tide_unix {
+            self.next_low_tide_timestamp.get_or_create(&labels).set(v as f64);
         }
     }
 }
