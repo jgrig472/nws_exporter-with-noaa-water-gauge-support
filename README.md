@@ -1,6 +1,6 @@
 # nws_exporter
 
-![build status](https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support/actions/workflows/rust.yml/badge.svg)
+[![build status](https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support/actions/workflows/rust.yml/badge.svg)](https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support/actions/workflows/rust.yml)
 [![docs.rs](https://docs.rs/nws_exporter/badge.svg)](https://docs.rs/nws_exporter/)
 [![crates.io](https://img.shields.io/crates/v/nws_exporter.svg)](https://crates.io/crates/nws_exporter/)
 [![Docker Hub](https://img.shields.io/docker/v/jasona1246/nws_exporter-with-noaa-water-gauge-support?label=docker%20hub)](https://hub.docker.com/r/jasona1246/nws_exporter-with-noaa-water-gauge-support)
