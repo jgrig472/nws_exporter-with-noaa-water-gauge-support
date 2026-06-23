@@ -69,9 +69,9 @@ impl CoOpsClient {
             base_url: base_url
                 .parse()
                 .map_err(|e| CoOpsClientError::Initialization(format!("cannot parse {}: {}", base_url, e)))?,
-            station_list_url: station_list_url.parse().map_err(|e| {
-                CoOpsClientError::Initialization(format!("cannot parse {}: {}", station_list_url, e))
-            })?,
+            station_list_url: station_list_url
+                .parse()
+                .map_err(|e| CoOpsClientError::Initialization(format!("cannot parse {}: {}", station_list_url, e)))?,
         })
     }
 
@@ -92,7 +92,12 @@ impl CoOpsClient {
                 station_id,
                 "predictions",
                 "english",
-                &[("datum", "MLLW"), ("interval", "hilo"), ("date", "today"), ("range", "48")]
+                &[
+                    ("datum", "MLLW"),
+                    ("interval", "hilo"),
+                    ("date", "today"),
+                    ("range", "48")
+                ]
             ),
             self.get(station_id, "wind", "metric", &[("date", "latest")]),
             self.get(station_id, "air_temperature", "metric", &[("date", "latest")]),
@@ -194,7 +199,13 @@ impl CoOpsClient {
 
         tracing::debug!(message = "fetching CO-OPS product", url = %url);
 
-        let res = match self.client.get(url.clone()).header(USER_AGENT, Self::USER_AGENT).send().await {
+        let res = match self
+            .client
+            .get(url.clone())
+            .header(USER_AGENT, Self::USER_AGENT)
+            .send()
+            .await
+        {
             Ok(res) => res,
             Err(e) => {
                 tracing::warn!(message = "failed to fetch CO-OPS product", product = %product, station = %station_id, error = %e);
@@ -235,7 +246,12 @@ pub fn nearest_station(buoy_lat: f64, buoy_lon: f64, stations: &[CoOpsStation], 
 
 /// Great-circle distance between two coordinates, in nautical miles.
 fn haversine_nmi(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
-    let (lat1, lon1, lat2, lon2) = (lat1.to_radians(), lon1.to_radians(), lat2.to_radians(), lon2.to_radians());
+    let (lat1, lon1, lat2, lon2) = (
+        lat1.to_radians(),
+        lon1.to_radians(),
+        lat2.to_radians(),
+        lon2.to_radians(),
+    );
     let dlat = lat2 - lat1;
     let dlon = lon2 - lon1;
     let a = (dlat / 2.0).sin().powi(2) + lat1.cos() * lat2.cos() * (dlon / 2.0).sin().powi(2);
@@ -413,7 +429,8 @@ mod tests {
 
     #[test]
     fn test_parse_wind() {
-        let body = r#"{"data":[{"t":"2026-06-23 04:06", "s":"11.86", "d":"155.0", "dr":"SSE", "g":"14.19", "f":"0,0"}]}"#;
+        let body =
+            r#"{"data":[{"t":"2026-06-23 04:06", "s":"11.86", "d":"155.0", "dr":"SSE", "g":"14.19", "f":"0,0"}]}"#;
         assert_eq!(parse_wind(body), (Some(155.0), Some(11.86), Some(14.19)));
     }
 
