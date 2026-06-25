@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.9.0 - 2026-06-25
+
+* Add `nws_buoy_latitude_degrees` and `nws_buoy_longitude_degrees` metrics with the buoy or
+  coastal station's own coordinates, parsed from the NDBC station metadata table.
+* Add `nws_buoy_coops_latitude_degrees` and `nws_buoy_coops_longitude_degrees` metrics (labeled
+  with `coops_station`) giving the coordinates of the CO-OPS tide station matched to a buoy, if
+  any.
+* Add a "Location" row to the [Grafana buoy dashboard](ext/buoy-dashboard.json) with a Geomap
+  panel plotting the buoy and its matched CO-OPS tide station, so you can visually confirm the
+  auto-match is sensible. The map automatically pans and zooms to fit whichever markers are
+  present whenever the buoy selector changes.
+
 ## v0.8.0 - 2026-06-23
 
 * Automatically match each `--buoy` station to the nearest NOAA CO-OPS tide station (within

@@ -31,6 +31,13 @@ struct BuoyLabels {
     buoy_name: String,
 }
 
+#[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
+struct CoOpsLocationLabels {
+    buoy: String,
+    buoy_name: String,
+    coops_station: String,
+}
+
 /// Holder for Prometheus metrics tracking NOAA NDBC buoy and coastal station observations.
 ///
 /// All metrics use the prefix `nws_buoy_` and carry a `buoy` label set to the station ID
@@ -57,6 +64,10 @@ struct BuoyLabels {
 /// - `nws_buoy_next_high_tide_timestamp_seconds` - predicted time of the next high tide, as a unix timestamp
 /// - `nws_buoy_next_low_tide_feet` - predicted height of the next low tide, in feet
 /// - `nws_buoy_next_low_tide_timestamp_seconds` - predicted time of the next low tide, as a unix timestamp
+/// - `nws_buoy_latitude_degrees` - latitude of the buoy or coastal station, in decimal degrees
+/// - `nws_buoy_longitude_degrees` - longitude of the buoy or coastal station, in decimal degrees
+/// - `nws_buoy_coops_latitude_degrees` - latitude of the matched CO-OPS tide station, in decimal degrees
+/// - `nws_buoy_coops_longitude_degrees` - longitude of the matched CO-OPS tide station, in decimal degrees
 ///
 /// For buoys matched to a nearby NOAA CO-OPS tide station (see `--buoy-tide-station` and
 /// `--coops-max-distance-nmi`), `wind_direction`/`wind_speed`/`wind_gust`, `pressure`,
@@ -83,6 +94,10 @@ pub struct BuoyMetrics {
     next_high_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     next_low_tide_feet: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     next_low_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    latitude: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    longitude: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    coops_latitude: Family<CoOpsLocationLabels, Gauge<f64, AtomicU64>>,
+    coops_longitude: Family<CoOpsLocationLabels, Gauge<f64, AtomicU64>>,
 }
 
 impl BuoyMetrics {
@@ -107,6 +122,10 @@ impl BuoyMetrics {
         let next_high_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let next_low_tide_feet = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let next_low_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let latitude = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let longitude = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let coops_latitude = Family::<CoOpsLocationLabels, Gauge<f64, AtomicU64>>::default();
+        let coops_longitude = Family::<CoOpsLocationLabels, Gauge<f64, AtomicU64>>::default();
 
         reg.register("nws_buoy_station", "Buoy or coastal station metadata", station.clone());
         reg.register(
@@ -199,6 +218,26 @@ impl BuoyMetrics {
             "Predicted time of the next low tide, as a unix timestamp",
             next_low_tide_timestamp.clone(),
         );
+        reg.register(
+            "nws_buoy_latitude_degrees",
+            "Latitude of the buoy or coastal station, in decimal degrees",
+            latitude.clone(),
+        );
+        reg.register(
+            "nws_buoy_longitude_degrees",
+            "Longitude of the buoy or coastal station, in decimal degrees",
+            longitude.clone(),
+        );
+        reg.register(
+            "nws_buoy_coops_latitude_degrees",
+            "Latitude of the matched CO-OPS tide station, in decimal degrees",
+            coops_latitude.clone(),
+        );
+        reg.register(
+            "nws_buoy_coops_longitude_degrees",
+            "Longitude of the matched CO-OPS tide station, in decimal degrees",
+            coops_longitude.clone(),
+        );
 
         Self {
             station,
@@ -220,6 +259,10 @@ impl BuoyMetrics {
             next_high_tide_timestamp,
             next_low_tide_feet,
             next_low_tide_timestamp,
+            latitude,
+            longitude,
+            coops_latitude,
+            coops_longitude,
         }
     }
 
@@ -321,5 +364,32 @@ impl BuoyMetrics {
         if let Some(v) = coops.next_low_tide_unix {
             self.next_low_tide_timestamp.get_or_create(&labels).set(v as f64);
         }
+    }
+
+    /// Set the buoy or coastal station's own coordinates, as parsed from the NDBC station
+    /// metadata table. Static for the lifetime of the process, so this is called once at
+    /// startup rather than on every `update()`.
+    pub fn set_location(&self, station_id: &str, name: &str, lat: f64, lon: f64) {
+        let labels = BuoyLabels {
+            buoy: station_id.to_string(),
+            buoy_name: name.to_string(),
+        };
+
+        self.latitude.get_or_create(&labels).set(lat);
+        self.longitude.get_or_create(&labels).set(lon);
+    }
+
+    /// Set the coordinates of the CO-OPS tide station matched to this buoy. Static for the
+    /// lifetime of the process, so this is called once at startup rather than on every
+    /// `apply_coops()`.
+    pub fn set_coops_location(&self, station_id: &str, name: &str, coops_station: &str, lat: f64, lon: f64) {
+        let labels = CoOpsLocationLabels {
+            buoy: station_id.to_string(),
+            buoy_name: name.to_string(),
+            coops_station: coops_station.to_string(),
+        };
+
+        self.coops_latitude.get_or_create(&labels).set(lat);
+        self.coops_longitude.get_or_create(&labels).set(lon);
     }
 }

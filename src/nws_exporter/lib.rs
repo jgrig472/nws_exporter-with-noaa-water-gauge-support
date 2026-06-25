@@ -65,6 +65,10 @@
 //! * `nws_buoy_next_high_tide_timestamp_seconds{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted time of the next high tide, as a unix timestamp.
 //! * `nws_buoy_next_low_tide_feet{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted height of the next low tide, in feet.
 //! * `nws_buoy_next_low_tide_timestamp_seconds{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Predicted time of the next low tide, as a unix timestamp.
+//! * `nws_buoy_latitude_degrees{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Latitude of the buoy or coastal station, in decimal degrees.
+//! * `nws_buoy_longitude_degrees{buoy=$BUOY,buoy_name=$BUOY_NAME}` - Longitude of the buoy or coastal station, in decimal degrees.
+//! * `nws_buoy_coops_latitude_degrees{buoy=$BUOY,buoy_name=$BUOY_NAME,coops_station=$COOPS_STATION}` - Latitude of the matched CO-OPS tide station, in decimal degrees.
+//! * `nws_buoy_coops_longitude_degrees{buoy=$BUOY,buoy_name=$BUOY_NAME,coops_station=$COOPS_STATION}` - Longitude of the matched CO-OPS tide station, in decimal degrees.
 //!
 //! [NOAA NDBC]: https://www.ndbc.noaa.gov/
 //!

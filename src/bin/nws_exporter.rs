@@ -246,6 +246,20 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         }
 
         let buoy_metrics = BuoyMetrics::new(&mut registry);
+
+        for id in opts.buoy.iter() {
+            let id = id.to_uppercase();
+            let name = buoy_names.get(&id).map(String::as_str).unwrap_or("");
+            if let Some((Some(lat), Some(lon))) = buoy_info.get(&id).map(|info| (info.lat, info.lon)) {
+                buoy_metrics.set_location(&id, name, lat, lon);
+            }
+            if let Some(coops_id) = tide_stations.get(&id) {
+                if let Some(s) = coops_stations.iter().find(|s| &s.id == coops_id) {
+                    buoy_metrics.set_coops_location(&id, name, coops_id, s.lat, s.lng);
+                }
+            }
+        }
+
         let buoy_update = BuoyUpdateTask::new(
             opts.buoy,
             buoy_metrics,
