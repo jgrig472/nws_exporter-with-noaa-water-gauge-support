@@ -1425,6 +1425,190 @@
             }
           }
         }
+      },
+      "panel-19": {
+        "kind": "Panel",
+        "spec": {
+          "id": 19,
+          "title": "Buoy & CO-OPS Station Location",
+          "description": "Plots the NDBC buoy's published coordinates alongside its auto-matched NOAA CO-OPS tide station, to visually confirm the match is sensible. The CO-OPS marker is absent for buoys with no nearby tide station.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": { "expr": "nws_buoy_latitude_degrees{buoy_name=\"$buoy\"}" }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": { "expr": "nws_buoy_longitude_degrees{buoy_name=\"$buoy\"}" }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": { "expr": "nws_buoy_coops_latitude_degrees{buoy_name=\"$buoy\"}" }
+                    },
+                    "refId": "C",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "spec": { "expr": "nws_buoy_coops_longitude_degrees{buoy_name=\"$buoy\"}" }
+                    },
+                    "refId": "D",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "joinByField",
+                  "spec": { "id": "joinByField", "options": { "byField": "Time", "mode": "outer" } }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_latitude_degrees"] },
+                      "alias": "buoy_latitude",
+                      "replaceFields": false
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_longitude_degrees"] },
+                      "alias": "buoy_longitude",
+                      "replaceFields": false
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_coops_latitude_degrees"] },
+                      "alias": "coops_latitude",
+                      "replaceFields": false
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "mode": "reduceRow",
+                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_coops_longitude_degrees"] },
+                      "alias": "coops_longitude",
+                      "replaceFields": false
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "geomap",
+            "version": "13.0.2",
+            "spec": {
+              "options": {
+                "view": { "id": "fit", "lat": 0, "lon": 0, "zoom": 1, "allLayers": true },
+                "controls": {
+                  "showZoom": true,
+                  "mouseWheelZoom": true,
+                  "showAttribution": true,
+                  "showScale": false,
+                  "showDebug": false,
+                  "showMeasure": false
+                },
+                "basemap": { "name": "Basemap", "type": "default", "config": {} },
+                "layers": [
+                  {
+                    "type": "markers",
+                    "name": "NDBC Buoy",
+                    "location": { "mode": "coords", "latitude": "buoy_latitude", "longitude": "buoy_longitude" },
+                    "config": {
+                      "style": {
+                        "size": { "fixed": 8, "min": 2, "max": 15 },
+                        "color": { "fixed": "blue" },
+                        "opacity": 0.8,
+                        "symbol": { "fixed": "img/icons/marker/circle.svg", "mode": "fixed" },
+                        "symbolAlign": { "horizontal": "center", "vertical": "center" }
+                      },
+                      "showLegend": true
+                    },
+                    "tooltip": true,
+                    "opacity": 1
+                  },
+                  {
+                    "type": "markers",
+                    "name": "CO-OPS Tide Station",
+                    "location": { "mode": "coords", "latitude": "coops_latitude", "longitude": "coops_longitude" },
+                    "config": {
+                      "style": {
+                        "size": { "fixed": 8, "min": 2, "max": 15 },
+                        "color": { "fixed": "orange" },
+                        "opacity": 0.8,
+                        "symbol": { "fixed": "img/icons/marker/circle.svg", "mode": "fixed" },
+                        "symbolAlign": { "horizontal": "center", "vertical": "center" }
+                      },
+                      "showLegend": true
+                    },
+                    "tooltip": true,
+                    "opacity": 1
+                  }
+                ],
+                "tooltip": { "mode": "details" }
+              },
+              "fieldConfig": { "defaults": {}, "overrides": [] }
+            }
+          }
+        }
       }
     },
     "layout": {
@@ -1528,6 +1712,21 @@
                   "items": [
                     { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 8, "height": 7, "element": { "kind": "ElementReference", "name": "panel-17" } } },
                     { "kind": "GridLayoutItem", "spec": { "x": 8, "y": 0, "width": 16, "height": 7, "element": { "kind": "ElementReference", "name": "panel-18" } } }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "title": "Location",
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 24, "height": 11, "element": { "kind": "ElementReference", "name": "panel-19" } } }
                   ]
                 }
               }
