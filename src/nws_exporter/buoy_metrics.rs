@@ -32,10 +32,18 @@ struct BuoyLabels {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
+struct LocationLabels {
+    buoy: String,
+    buoy_name: String,
+    region: String,
+}
+
+#[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
 struct CoOpsLocationLabels {
     buoy: String,
     buoy_name: String,
     coops_station: String,
+    region: String,
 }
 
 /// Holder for Prometheus metrics tracking NOAA NDBC buoy and coastal station observations.
@@ -94,8 +102,8 @@ pub struct BuoyMetrics {
     next_high_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     next_low_tide_feet: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
     next_low_tide_timestamp: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
-    latitude: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
-    longitude: Family<BuoyLabels, Gauge<f64, AtomicU64>>,
+    latitude: Family<LocationLabels, Gauge<f64, AtomicU64>>,
+    longitude: Family<LocationLabels, Gauge<f64, AtomicU64>>,
     coops_latitude: Family<CoOpsLocationLabels, Gauge<f64, AtomicU64>>,
     coops_longitude: Family<CoOpsLocationLabels, Gauge<f64, AtomicU64>>,
 }
@@ -122,8 +130,8 @@ impl BuoyMetrics {
         let next_high_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let next_low_tide_feet = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
         let next_low_tide_timestamp = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
-        let latitude = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
-        let longitude = Family::<BuoyLabels, Gauge<f64, AtomicU64>>::default();
+        let latitude = Family::<LocationLabels, Gauge<f64, AtomicU64>>::default();
+        let longitude = Family::<LocationLabels, Gauge<f64, AtomicU64>>::default();
         let coops_latitude = Family::<CoOpsLocationLabels, Gauge<f64, AtomicU64>>::default();
         let coops_longitude = Family::<CoOpsLocationLabels, Gauge<f64, AtomicU64>>::default();
 
@@ -367,12 +375,14 @@ impl BuoyMetrics {
     }
 
     /// Set the buoy or coastal station's own coordinates, as parsed from the NDBC station
-    /// metadata table. Static for the lifetime of the process, so this is called once at
-    /// startup rather than on every `update()`.
-    pub fn set_location(&self, station_id: &str, name: &str, lat: f64, lon: f64) {
-        let labels = BuoyLabels {
+    /// metadata table. `region` is a human-readable body-of-water name (e.g. "Great Lakes")
+    /// used as a Prometheus label so Grafana can filter the buoy selector by region.
+    /// Static for the lifetime of the process, so this is called once at startup.
+    pub fn set_location(&self, station_id: &str, name: &str, region: &str, lat: f64, lon: f64) {
+        let labels = LocationLabels {
             buoy: station_id.to_string(),
             buoy_name: name.to_string(),
+            region: region.to_string(),
         };
 
         self.latitude.get_or_create(&labels).set(lat);
@@ -382,11 +392,20 @@ impl BuoyMetrics {
     /// Set the coordinates of the CO-OPS tide station matched to this buoy. Static for the
     /// lifetime of the process, so this is called once at startup rather than on every
     /// `apply_coops()`.
-    pub fn set_coops_location(&self, station_id: &str, name: &str, coops_station: &str, lat: f64, lon: f64) {
+    pub fn set_coops_location(
+        &self,
+        station_id: &str,
+        name: &str,
+        coops_station: &str,
+        region: &str,
+        lat: f64,
+        lon: f64,
+    ) {
         let labels = CoOpsLocationLabels {
             buoy: station_id.to_string(),
             buoy_name: name.to_string(),
             coops_station: coops_station.to_string(),
+            region: region.to_string(),
         };
 
         self.coops_latitude.get_or_create(&labels).set(lat);

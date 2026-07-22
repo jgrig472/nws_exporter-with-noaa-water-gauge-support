@@ -51,7 +51,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_air_temperature_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Air Temp"
@@ -77,7 +79,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -85,8 +93,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "fahrenheit",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -112,7 +130,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_water_temperature_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Water Temp"
@@ -138,7 +158,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -146,8 +172,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "fahrenheit",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -173,7 +209,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Speed"
@@ -199,7 +237,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -207,8 +251,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "velocityms",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -234,7 +288,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_gust_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Gust"
@@ -260,7 +316,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -268,8 +330,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "velocityms",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "orange" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "orange"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -295,7 +367,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_pressure_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Pressure"
@@ -321,7 +395,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -329,8 +409,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "pressurehpa",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -356,7 +446,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_dewpoint_degrees{buoy_name=\"$buoy\"} * 9 / 5 + 32",
                         "legendFormat": "Dewpoint"
@@ -382,7 +474,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -390,8 +488,18 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "fahrenheit",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "thresholds" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -417,7 +525,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_direction_degrees{buoy_name=\"$buoy\"}"
                       }
@@ -474,7 +584,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}"
                       }
@@ -490,7 +602,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_direction_degrees{buoy_name=\"$buoy\"}"
                       }
@@ -505,7 +619,10 @@
                   "kind": "joinByField",
                   "spec": {
                     "id": "joinByField",
-                    "options": { "byField": "Time", "mode": "outer" }
+                    "options": {
+                      "byField": "Time",
+                      "mode": "outer"
+                    }
                   }
                 },
                 {
@@ -514,7 +631,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_wind_speed_mps"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_wind_speed_mps"
+                        ]
+                      },
                       "alias": "wind_speed",
                       "replaceFields": false
                     }
@@ -526,7 +648,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_wind_direction_degrees"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_wind_direction_degrees"
+                        ]
+                      },
                       "alias": "wind_direction",
                       "replaceFields": false
                     }
@@ -568,7 +695,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_speed_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Speed"
@@ -585,7 +714,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wind_gust_mps{buoy_name=\"$buoy\"}",
                         "legendFormat": "Wind Gust"
@@ -606,15 +737,37 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
-                "tooltip": { "hideZeros": false, "mode": "multi", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "velocityms",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "palette-classic" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
@@ -626,27 +779,60 @@
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": [
                   {
-                    "matcher": { "id": "byName", "options": "Wind Speed" },
-                    "properties": [{ "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }]
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Wind Speed"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
                   },
                   {
-                    "matcher": { "id": "byName", "options": "Wind Gust" },
-                    "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Wind Gust"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -672,7 +858,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wave_height_meters{buoy_name=\"$buoy\"} * 3.28084",
                         "legendFormat": "Wave Height"
@@ -694,13 +882,24 @@
             "spec": {
               "options": {
                 "displayMode": "lcd",
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": false },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
                 "maxVizHeight": 300,
                 "minVizHeight": 10,
                 "minVizWidth": 0,
                 "namePlacement": "auto",
                 "orientation": "horizontal",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showUnfilled": true,
                 "sizing": "auto",
                 "valueMode": "color"
@@ -713,13 +912,27 @@
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
-                      { "value": 0, "color": "green" },
-                      { "value": 1.6, "color": "yellow" },
-                      { "value": 4.9, "color": "orange" },
-                      { "value": 8.2, "color": "red" }
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 1.6,
+                        "color": "yellow"
+                      },
+                      {
+                        "value": 4.9,
+                        "color": "orange"
+                      },
+                      {
+                        "value": 8.2,
+                        "color": "red"
+                      }
                     ]
                   },
-                  "color": { "mode": "thresholds" }
+                  "color": {
+                    "mode": "thresholds"
+                  }
                 },
                 "overrides": []
               }
@@ -745,7 +958,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_wave_direction_degrees{buoy_name=\"$buoy\"}"
                       }
@@ -802,7 +1017,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_dominant_wave_period_seconds{buoy_name=\"$buoy\"}",
                         "legendFormat": "Dominant Period"
@@ -819,7 +1036,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_average_wave_period_seconds{buoy_name=\"$buoy\"}",
                         "legendFormat": "Average Period"
@@ -840,15 +1059,37 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
-                "tooltip": { "hideZeros": false, "mode": "multi", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "s",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "palette-classic" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
@@ -860,17 +1101,28 @@
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -897,7 +1149,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_pressure_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Pressure"
@@ -918,15 +1172,38 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": false },
-                "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "pressurehpa",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "fixed", "fixedColor": "blue" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
@@ -938,17 +1215,28 @@
                     "drawStyle": "line",
                     "fillOpacity": 25,
                     "gradientMode": "opacity",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -975,7 +1263,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_pressure_tendency_hpa{buoy_name=\"$buoy\"}",
                         "legendFormat": "Tendency"
@@ -996,15 +1286,37 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": false },
-                "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "pressurehpa",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "continuous-RdYlGr" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "continuous-RdYlGr"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": true,
@@ -1016,17 +1328,28 @@
                     "drawStyle": "bars",
                     "fillOpacity": 60,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 1,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": false,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -1053,7 +1376,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_tide_feet{buoy_name=\"$buoy\"}",
                         "legendFormat": "Tide"
@@ -1074,15 +1399,38 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": false },
-                "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "lengthft",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "fixed", "fixedColor": "purple" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "purple"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": true,
@@ -1094,17 +1442,28 @@
                     "drawStyle": "line",
                     "fillOpacity": 15,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "smooth",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -1131,7 +1490,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_visibility_nmi{buoy_name=\"$buoy\"}",
                         "legendFormat": "Visibility"
@@ -1152,15 +1513,38 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": false },
-                "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "nmi",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "fixed", "fixedColor": "yellow" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "yellow"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
@@ -1172,17 +1556,28 @@
                     "drawStyle": "line",
                     "fillOpacity": 15,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": []
@@ -1209,7 +1604,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_next_high_tide_feet{buoy_name=\"$buoy\"}",
                         "legendFormat": "Next High"
@@ -1226,7 +1623,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_next_high_tide_timestamp_seconds{buoy_name=\"$buoy\"} * 1000",
                         "legendFormat": "Next High Time"
@@ -1243,7 +1642,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_next_low_tide_feet{buoy_name=\"$buoy\"}",
                         "legendFormat": "Next Low"
@@ -1260,7 +1661,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "nws_buoy_next_low_tide_timestamp_seconds{buoy_name=\"$buoy\"} * 1000",
                         "legendFormat": "Next Low Time"
@@ -1286,7 +1689,13 @@
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
@@ -1294,26 +1703,72 @@
               "fieldConfig": {
                 "defaults": {
                   "unit": "lengthft",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "blue" }] },
-                  "color": { "mode": "fixed", "fixedColor": "blue" }
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "blue"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  }
                 },
                 "overrides": [
                   {
-                    "matcher": { "id": "byName", "options": "Next High Time" },
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Next High Time"
+                    },
                     "properties": [
-                      { "id": "unit", "value": "dateTimeFromNow" },
-                      { "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }
+                      {
+                        "id": "unit",
+                        "value": "dateTimeFromNow"
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
                     ]
                   },
                   {
-                    "matcher": { "id": "byName", "options": "Next Low" },
-                    "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Next Low"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
                   },
                   {
-                    "matcher": { "id": "byName", "options": "Next Low Time" },
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Next Low Time"
+                    },
                     "properties": [
-                      { "id": "unit", "value": "dateTimeFromNow" },
-                      { "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }
+                      {
+                        "id": "unit",
+                        "value": "dateTimeFromNow"
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
                     ]
                   }
                 ]
@@ -1340,7 +1795,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "(nws_buoy_next_high_tide_timestamp_seconds{buoy_name=\"$buoy\"} - time()) / 3600",
                         "legendFormat": "Until High"
@@ -1357,7 +1814,9 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
                       "spec": {
                         "expr": "(nws_buoy_next_low_tide_timestamp_seconds{buoy_name=\"$buoy\"} - time()) / 3600",
                         "legendFormat": "Until Low"
@@ -1378,15 +1837,37 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "annotations": { "clustering": -1, "multiLane": false },
-                "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
-                "tooltip": { "hideZeros": false, "mode": "multi", "sort": "none" }
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
               },
               "fieldConfig": {
                 "defaults": {
                   "unit": "h",
-                  "thresholds": { "mode": "absolute", "steps": [{ "value": 0, "color": "green" }] },
-                  "color": { "mode": "palette-classic" },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
                   "custom": {
                     "axisBorderShow": false,
                     "axisCenteredZero": false,
@@ -1398,27 +1879,60 @@
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
-                    "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
                     "lineWidth": 2,
                     "pointSize": 5,
-                    "scaleDistribution": { "type": "linear" },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
                     "showPoints": "never",
                     "showValues": false,
                     "spanNulls": true,
-                    "stacking": { "group": "A", "mode": "none" },
-                    "thresholdsStyle": { "mode": "off" }
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
                   }
                 },
                 "overrides": [
                   {
-                    "matcher": { "id": "byName", "options": "Until High" },
-                    "properties": [{ "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }]
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Until High"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
                   },
                   {
-                    "matcher": { "id": "byName", "options": "Until Low" },
-                    "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Until Low"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "orange",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -1444,8 +1958,12 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
-                      "spec": { "expr": "nws_buoy_latitude_degrees{buoy_name=\"$buoy\"}" }
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "spec": {
+                        "expr": "nws_buoy_latitude_degrees{buoy_name=\"$buoy\"}"
+                      }
                     },
                     "refId": "A",
                     "hidden": false
@@ -1458,8 +1976,12 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
-                      "spec": { "expr": "nws_buoy_longitude_degrees{buoy_name=\"$buoy\"}" }
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "spec": {
+                        "expr": "nws_buoy_longitude_degrees{buoy_name=\"$buoy\"}"
+                      }
                     },
                     "refId": "B",
                     "hidden": false
@@ -1472,8 +1994,12 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
-                      "spec": { "expr": "nws_buoy_coops_latitude_degrees{buoy_name=\"$buoy\"}" }
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "spec": {
+                        "expr": "nws_buoy_coops_latitude_degrees{buoy_name=\"$buoy\"}"
+                      }
                     },
                     "refId": "C",
                     "hidden": false
@@ -1486,8 +2012,12 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": { "name": "PBFA97CFB590B2093" },
-                      "spec": { "expr": "nws_buoy_coops_longitude_degrees{buoy_name=\"$buoy\"}" }
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "spec": {
+                        "expr": "nws_buoy_coops_longitude_degrees{buoy_name=\"$buoy\"}"
+                      }
                     },
                     "refId": "D",
                     "hidden": false
@@ -1497,7 +2027,13 @@
               "transformations": [
                 {
                   "kind": "joinByField",
-                  "spec": { "id": "joinByField", "options": { "byField": "Time", "mode": "outer" } }
+                  "spec": {
+                    "id": "joinByField",
+                    "options": {
+                      "byField": "Time",
+                      "mode": "outer"
+                    }
+                  }
                 },
                 {
                   "kind": "calculateField",
@@ -1505,7 +2041,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_latitude_degrees"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_latitude_degrees"
+                        ]
+                      },
                       "alias": "buoy_latitude",
                       "replaceFields": false
                     }
@@ -1517,7 +2058,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_longitude_degrees"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_longitude_degrees"
+                        ]
+                      },
                       "alias": "buoy_longitude",
                       "replaceFields": false
                     }
@@ -1529,7 +2075,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_coops_latitude_degrees"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_coops_latitude_degrees"
+                        ]
+                      },
                       "alias": "coops_latitude",
                       "replaceFields": false
                     }
@@ -1541,7 +2092,12 @@
                     "id": "calculateField",
                     "options": {
                       "mode": "reduceRow",
-                      "reduce": { "reducer": "lastNotNull", "include": ["nws_buoy_coops_longitude_degrees"] },
+                      "reduce": {
+                        "reducer": "lastNotNull",
+                        "include": [
+                          "nws_buoy_coops_longitude_degrees"
+                        ]
+                      },
                       "alias": "coops_longitude",
                       "replaceFields": false
                     }
@@ -1557,7 +2113,13 @@
             "version": "13.0.2",
             "spec": {
               "options": {
-                "view": { "id": "fit", "lat": 0, "lon": 0, "zoom": 1, "allLayers": true },
+                "view": {
+                  "id": "fit",
+                  "lat": 0,
+                  "lon": 0,
+                  "zoom": 1,
+                  "allLayers": true
+                },
                 "controls": {
                   "showZoom": true,
                   "mouseWheelZoom": true,
@@ -1566,19 +2128,39 @@
                   "showDebug": false,
                   "showMeasure": false
                 },
-                "basemap": { "name": "Basemap", "type": "default", "config": {} },
+                "basemap": {
+                  "name": "Basemap",
+                  "type": "default",
+                  "config": {}
+                },
                 "layers": [
                   {
                     "type": "markers",
                     "name": "NDBC Buoy",
-                    "location": { "mode": "coords", "latitude": "buoy_latitude", "longitude": "buoy_longitude" },
+                    "location": {
+                      "mode": "coords",
+                      "latitude": "buoy_latitude",
+                      "longitude": "buoy_longitude"
+                    },
                     "config": {
                       "style": {
-                        "size": { "fixed": 8, "min": 2, "max": 15 },
-                        "color": { "fixed": "blue" },
+                        "size": {
+                          "fixed": 8,
+                          "min": 2,
+                          "max": 15
+                        },
+                        "color": {
+                          "fixed": "blue"
+                        },
                         "opacity": 0.8,
-                        "symbol": { "fixed": "img/icons/marker/circle.svg", "mode": "fixed" },
-                        "symbolAlign": { "horizontal": "center", "vertical": "center" }
+                        "symbol": {
+                          "fixed": "img/icons/marker/circle.svg",
+                          "mode": "fixed"
+                        },
+                        "symbolAlign": {
+                          "horizontal": "center",
+                          "vertical": "center"
+                        }
                       },
                       "showLegend": true
                     },
@@ -1588,14 +2170,30 @@
                   {
                     "type": "markers",
                     "name": "CO-OPS Tide Station",
-                    "location": { "mode": "coords", "latitude": "coops_latitude", "longitude": "coops_longitude" },
+                    "location": {
+                      "mode": "coords",
+                      "latitude": "coops_latitude",
+                      "longitude": "coops_longitude"
+                    },
                     "config": {
                       "style": {
-                        "size": { "fixed": 8, "min": 2, "max": 15 },
-                        "color": { "fixed": "orange" },
+                        "size": {
+                          "fixed": 8,
+                          "min": 2,
+                          "max": 15
+                        },
+                        "color": {
+                          "fixed": "orange"
+                        },
                         "opacity": 0.8,
-                        "symbol": { "fixed": "img/icons/marker/circle.svg", "mode": "fixed" },
-                        "symbolAlign": { "horizontal": "center", "vertical": "center" }
+                        "symbol": {
+                          "fixed": "img/icons/marker/circle.svg",
+                          "mode": "fixed"
+                        },
+                        "symbolAlign": {
+                          "horizontal": "center",
+                          "vertical": "center"
+                        }
                       },
                       "showLegend": true
                     },
@@ -1603,9 +2201,14 @@
                     "opacity": 1
                   }
                 ],
-                "tooltip": { "mode": "details" }
+                "tooltip": {
+                  "mode": "details"
+                }
               },
-              "fieldConfig": { "defaults": {}, "overrides": [] }
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
             }
           }
         }
@@ -1624,12 +2227,84 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-1" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 4, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-2" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 8, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-3" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 12, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-4" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 16, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-5" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 20, "y": 0, "width": 4, "height": 4, "element": { "kind": "ElementReference", "name": "panel-6" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-1"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 4,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 8,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 16,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 20,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-6"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1644,9 +2319,45 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 6, "height": 9, "element": { "kind": "ElementReference", "name": "panel-7" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 6, "y": 0, "width": 9, "height": 9, "element": { "kind": "ElementReference", "name": "panel-8" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 15, "y": 0, "width": 9, "height": 9, "element": { "kind": "ElementReference", "name": "panel-9" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 6,
+                        "height": 9,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-7"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 6,
+                        "y": 0,
+                        "width": 9,
+                        "height": 9,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-8"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 15,
+                        "y": 0,
+                        "width": 9,
+                        "height": 9,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1661,9 +2372,45 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 8, "height": 6, "element": { "kind": "ElementReference", "name": "panel-10" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 8, "y": 0, "width": 8, "height": 6, "element": { "kind": "ElementReference", "name": "panel-11" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 16, "y": 0, "width": 8, "height": 6, "element": { "kind": "ElementReference", "name": "panel-12" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 8,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-10"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 8,
+                        "y": 0,
+                        "width": 8,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-11"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 16,
+                        "y": 0,
+                        "width": 8,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-12"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1678,8 +2425,32 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 12, "height": 8, "element": { "kind": "ElementReference", "name": "panel-13" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 12, "y": 0, "width": 12, "height": 8, "element": { "kind": "ElementReference", "name": "panel-14" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 12,
+                        "height": 8,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-13"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 0,
+                        "width": 12,
+                        "height": 8,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-14"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1694,8 +2465,32 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 12, "height": 7, "element": { "kind": "ElementReference", "name": "panel-15" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 12, "y": 0, "width": 12, "height": 7, "element": { "kind": "ElementReference", "name": "panel-16" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 12,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-15"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 0,
+                        "width": 12,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-16"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1710,8 +2505,32 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 8, "height": 7, "element": { "kind": "ElementReference", "name": "panel-17" } } },
-                    { "kind": "GridLayoutItem", "spec": { "x": 8, "y": 0, "width": 16, "height": 7, "element": { "kind": "ElementReference", "name": "panel-18" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 8,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-17"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 8,
+                        "y": 0,
+                        "width": 16,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-18"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1726,7 +2545,19 @@
                 "kind": "GridLayout",
                 "spec": {
                   "items": [
-                    { "kind": "GridLayoutItem", "spec": { "x": 0, "y": 0, "width": 24, "height": 11, "element": { "kind": "ElementReference", "name": "panel-19" } } }
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 11,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-19"
+                        }
+                      }
+                    }
                   ]
                 }
               }
@@ -1738,13 +2569,28 @@
     "links": [],
     "liveNow": false,
     "preload": false,
-    "tags": ["nws_exporter", "noaa", "buoy"],
+    "tags": [
+      "nws_exporter",
+      "noaa",
+      "buoy"
+    ],
     "timeSettings": {
       "timezone": "browser",
       "from": "now-24h",
       "to": "now",
       "autoRefresh": "1m",
-      "autoRefreshIntervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"],
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
       "hideTimepicker": false,
       "fiscalYearStartMonth": 0
     },
@@ -1753,8 +2599,47 @@
       {
         "kind": "QueryVariable",
         "spec": {
+          "name": "region",
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "label": "Body of Water",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "prometheus",
+            "version": "v0",
+            "datasource": {
+              "name": "PBFA97CFB590B2093"
+            },
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(nws_buoy_latitude_degrees, region)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "alphabeticalAsc",
+          "definition": "label_values(nws_buoy_latitude_degrees, region)",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": false
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
           "name": "buoy",
-          "current": { "text": "", "value": "" },
+          "current": {
+            "text": "",
+            "value": ""
+          },
           "label": "Buoy",
           "hide": "dontHide",
           "refresh": "onDashboardLoad",
@@ -1763,17 +2648,19 @@
             "kind": "DataQuery",
             "group": "prometheus",
             "version": "v0",
-            "datasource": { "name": "PBFA97CFB590B2093" },
+            "datasource": {
+              "name": "PBFA97CFB590B2093"
+            },
             "spec": {
               "qryType": 1,
-              "query": "label_values(buoy_name)",
+              "query": "label_values(nws_buoy_latitude_degrees{region=~\"$region\"}, buoy_name)",
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             }
           },
           "regex": "",
           "regexApplyTo": "value",
           "sort": "alphabeticalAsc",
-          "definition": "label_values(buoy_name)",
+          "definition": "label_values(nws_buoy_latitude_degrees{region=~\"$region\"}, buoy_name)",
           "options": [],
           "multi": false,
           "includeAll": false,

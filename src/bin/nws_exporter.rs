@@ -41,6 +41,28 @@ use tower_http::trace::TraceLayer;
 use tracing::{Instrument, Level};
 
 const DEFAULT_LOG_LEVEL: Level = Level::INFO;
+
+/// Classify a lat/lon coordinate into a broad body-of-water region name used as a Prometheus
+/// label so Grafana can filter the buoy selector dropdown by region.
+fn classify_region(lat: f64, lon: f64) -> &'static str {
+    // Great Lakes must be checked before Atlantic; their longitude ranges overlap.
+    if (41.0..=49.5).contains(&lat) && (-93.0..=-75.5).contains(&lon) {
+        return "Great Lakes";
+    }
+    if (17.0..=31.0).contains(&lat) && (-98.0..=-80.0).contains(&lon) {
+        return "Gulf of Mexico";
+    }
+    // West of 115°W: US West Coast, Hawaii, Alaska
+    if lon <= -115.0 {
+        return "Pacific Ocean";
+    }
+    // Low-latitude Atlantic basin east of the Gulf
+    if (10.0..=26.0).contains(&lat) && (-90.0..=-58.0).contains(&lon) {
+        return "Caribbean Sea";
+    }
+    // Everything else in the Western Atlantic / East Coast
+    "Atlantic Ocean"
+}
 const DEFAULT_BIND_ADDR: ([u8; 4], u16) = ([0, 0, 0, 0], 9782);
 const DEFAULT_REFERSH_SECS: u64 = 300;
 const DEFAULT_TIMEOUT_MILLIS: u64 = 5000;
@@ -251,11 +273,12 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             let id = id.to_uppercase();
             let name = buoy_names.get(&id).map(String::as_str).unwrap_or("");
             if let Some((Some(lat), Some(lon))) = buoy_info.get(&id).map(|info| (info.lat, info.lon)) {
-                buoy_metrics.set_location(&id, name, lat, lon);
-            }
-            if let Some(coops_id) = tide_stations.get(&id) {
-                if let Some(s) = coops_stations.iter().find(|s| &s.id == coops_id) {
-                    buoy_metrics.set_coops_location(&id, name, coops_id, s.lat, s.lng);
+                let region = classify_region(lat, lon);
+                buoy_metrics.set_location(&id, name, region, lat, lon);
+                if let Some(coops_id) = tide_stations.get(&id) {
+                    if let Some(s) = coops_stations.iter().find(|s| &s.id == coops_id) {
+                        buoy_metrics.set_coops_location(&id, name, coops_id, region, s.lat, s.lng);
+                    }
                 }
             }
         }
