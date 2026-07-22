@@ -1,6 +1,6 @@
 [package]
 name = "nws_exporter"
-version = "0.9.0"
+version = "0.9.1"
 authors = ["Jason Griggs"]
 description = "Prometheus metrics exporter for api.weather.gov"
 homepage = "https://github.com/jgrig472/nws_exporter-with-noaa-water-gauge-support"

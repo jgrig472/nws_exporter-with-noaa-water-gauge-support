@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.9.1 - 2026-07-21
+
+* Add a `region` label to `nws_buoy_latitude_degrees` and `nws_buoy_longitude_degrees` metrics,
+  automatically classified from each buoy's coordinates: **Great Lakes**, **Gulf of Mexico**,
+  **Pacific Ocean**, **Caribbean Sea**, or **Atlantic Ocean**.
+* Add a **"Body of Water"** multi-select variable to the [Grafana buoy dashboard](ext/buoy-dashboard.json)
+  that filters the buoy selector to only stations in the chosen region(s). Selecting "Great Lakes"
+  shows only Lake Michigan/Erie/Superior/etc. buoys; selecting "All" restores the full list.
+
 ## v0.9.0 - 2026-06-25
 
 * Add `nws_buoy_latitude_degrees` and `nws_buoy_longitude_degrees` metrics with the buoy or
