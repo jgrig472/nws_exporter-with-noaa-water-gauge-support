@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.9.3 - 2026-07-22
+
+* Enhance the [SPC Convective Outlook dashboard](ext/spc-outlook-dashboard.json) with a live
+  canvas risk-area map for each of the three days. Each Day row now has a **map panel** (left,
+  wider) and the existing **text discussion panel** (right) side-by-side.
+* The map fetches SPC's public GeoJSON (`day{N}otlk_cat.nolyr.geojson`) and renders each risk
+  area polygon with the official SPC fill and stroke colors (TSTM → green, MRGL → dark green,
+  SLGT → yellow, ENH → orange, MDT → red, HIGH → magenta) at 70 % opacity over a CONUS basemap
+  drawn from US state boundaries. Higher-risk polygons paint on top of lower-risk ones.
+* State outlines are overlaid on top of the risk areas for geographic context, fetched from a
+  lightweight public GeoJSON source (89 KB, CORS-open).
+* A legend in the bottom-right corner of each map panel lists every active risk category and
+  its color swatch. If no severe-weather areas exist the panel shows "No severe weather areas."
+* No additional Grafana plugins or datasource connections are required; the map renders
+  entirely in the browser via the Canvas 2D API.
+
 ## v0.9.2 - 2026-07-22
 
 * Revamp the [Grafana NWS Station dashboard](ext/dashboard.json) from Grafana 8.4.3 schema to
