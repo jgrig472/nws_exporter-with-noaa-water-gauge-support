@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.9.2 - 2026-07-22
+
+* Revamp the [Grafana NWS Station dashboard](ext/dashboard.json) from Grafana 8.4.3 schema to
+  the modern `dashboard.grafana.app/v2` format targeting Grafana 13, consistent with the buoy
+  dashboard.
+* Add a **Current Conditions** stat row showing all six key readings at a glance — Temperature,
+  Feels Like (Wind Chill), Dewpoint, Relative Humidity, Pressure, and Visibility — with
+  color-coded threshold backgrounds (blue → green → yellow → red).
+* Surface three metrics that were **missing** from the old dashboard: Dewpoint, Barometric
+  Pressure, and Elevation.
+* Convert all values to human-readable units: temperature/dewpoint/wind-chill from raw Celsius
+  to **°F**, barometric pressure from Pascals to **hPa**, and visibility from meters to
+  **statute miles**.
+* Replace the time-series panels with modern Grafana 13 styling — smooth interpolation, gradient
+  fills, multi-series tooltip, and per-metric accent colors.
+* Update the Station variable to use short **ICAO codes** (e.g. `KBOS`, `KORD`) in the dropdown
+  instead of raw `https://api.weather.gov/stations/…` URLs.
+
 ## v0.9.1 - 2026-07-21
 
 * Add a `region` label to `nws_buoy_latitude_degrees` and `nws_buoy_longitude_degrees` metrics,
