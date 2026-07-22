@@ -5,7 +5,39 @@ This directory contains example Grafana dashboards and a Systemd unit file for `
 * `dashboard.json` - NWS weather station dashboard.
 * `water-dashboard.json` - NOAA water gauge dashboard.
 * `buoy-dashboard.json` - NOAA buoy/coastal station dashboard.
+* `spc-outlook-dashboard.json` - NOAA Storm Prediction Center Day 1/2/3 Convective Outlook dashboard.
 * `nws_exporter.service` - Systemd unit file for running `nws_exporter` as a service.
+
+## SPC Convective Outlook dashboard
+
+`spc-outlook-dashboard.json` fetches the SPC Day 1, Day 2, and Day 3 Convective Outlooks directly
+from `https://www.spc.noaa.gov/` using browser-side JavaScript — no Prometheus datasource or
+additional plugins are required. Each panel shows the current risk level (color-coded using SPC's
+official palette: green → yellow → orange → red → magenta), the issuance time, the headline and
+summary, and a collapsible full discussion. Panels refresh automatically every 15 minutes.
+
+### Required Grafana configuration
+
+The dashboard uses `<script>` tags in Grafana's Text panel to fetch live data from SPC. Grafana
+strips script tags by default, so you must enable HTML rendering in your `grafana.ini`:
+
+```ini
+[panels]
+disable_sanitize_html = true
+```
+
+Or via Docker Compose environment variable:
+
+```yaml
+services:
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+```
+
+Restart Grafana after making this change, then import `spc-outlook-dashboard.json` under
+Dashboards → New → Import. No Prometheus datasource connection is needed for this dashboard.
 
 ## Buoy dashboard plugin requirements
 
